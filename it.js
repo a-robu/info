@@ -10,15 +10,9 @@ function plogp(p) {
     return p * Math.log2(p)
 }
 
-function InvalidPDistException() {}
-
 function entropy(pdist) {
-    if (sum(pdist) !== 1) {
-        throw InvalidPDistException
-    }
     return - sum(pdist.map(plogp))
 }
 
 exports.plogp = plogp
-exports.InvalidPDistException = InvalidPDistException
 exports.entropy = entropy

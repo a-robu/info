@@ -1,7 +1,6 @@
 jest.unmock('../it');
 jest.unmock('compute-sum');
 const entropy = require('../it').entropy;
-const InvalidPDistException = require('../it').InvalidPDistException
 const plogp = require('../it').plogp;
 
 describe('plog', () => {
@@ -21,7 +20,4 @@ describe('entropy', () => {
         expect(entropy([0, 1])).toBe(0); // absolute certanty
         expect(entropy([0.5, 0.5])).toBe(1); //perfect coin toss
     });
-    it('throws an error if the probability dist is not valid', () => {
-        expect(() => {entropy([1, 2, 3, 4])}).toThrow(InvalidPDistException)
-    })
 });
