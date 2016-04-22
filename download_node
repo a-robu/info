@@ -1,0 +1,11 @@
+VERSION=4.4.2
+DIR_NAME=.node-installation
+wget https://nodejs.org/dist/v$VERSION/node-v$VERSION-linux-x64.tar.gz
+tar -xvzf node-v$VERSION-linux-x64.tar.gz 
+rm node-v$VERSION-linux-x64.tar.gz
+rm -rf $DIR_NAME
+mv node-v$VERSION-linux-x64 $DIR_NAME
+rm node 2> /dev/null
+rm npm 2> /dev/null
+ln -s $DIR_NAME/bin/node node
+ln -s $DIR_NAME/bin/npm npm

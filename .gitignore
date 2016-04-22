@@ -1,0 +1,4 @@
+*.swp
+.node-installation/
+coverage/
+node_modules/

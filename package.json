@@ -1,0 +1,17 @@
+{
+  "name": "infojs",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "./node ./node_modules/jest-cli/bin/jest.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "jest-cli": "^0.10.2"
+  },
+  "dependencies": {
+    "compute-sum": "^2.0.0"
+  }
+}
