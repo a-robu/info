@@ -12,6 +12,7 @@
     "jest-cli": "^0.10.2"
   },
   "dependencies": {
-    "compute-sum": "^2.0.0"
+    "compute-sum": "^2.0.0",
+    "zip-array": "^1.0.1"
   }
 }
