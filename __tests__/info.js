@@ -1,7 +1,7 @@
-jest.unmock('array-range')
-jest.unmock('compute-sum')
+jest.unmock('../util')
 jest.unmock('../info')
 jest.unmock('../table_matching')
+const util = require('../util')
 const info = require('../info')
 const table_matching = require('../table_matching')
 
@@ -55,3 +55,20 @@ describe('conditional_table', () => {
         ])
     })
 })
+
+describe('uniform', () => {
+    it('generates a fair coin', () => {
+        expect(info.uniform(['up', 'down'])).toEqual({
+            'up': 0.5,
+            'down': 0.5
+        })
+    })
+})
+
+describe('expectation', () => {
+    it('computes the expectation of a fair dice', () => {
+        const fair_dice = info.uniform(range(1, 6))
+        expect(info.expectation(fair_dice)).toBeCloseTo(3.5)
+    })
+})
+

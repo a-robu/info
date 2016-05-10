@@ -1,0 +1,5 @@
+exports.assert = require('assert')
+exports.sum = require('compute-sum')
+exports.map = require('object.map')
+exports.range = require('array-range')
+exports.values = require('object-values')
