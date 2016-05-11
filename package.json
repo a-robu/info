@@ -16,6 +16,7 @@
     "zip-array": "^1.0.1"
   },
   "devDependencies": {
+    "gulp": "git+https://git@github.com/gulpjs/gulp.git#4.0",
     "jasmine": "^2.4.1"
   }
 }

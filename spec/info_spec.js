@@ -64,7 +64,7 @@ describe('uniform', () => {
 
 describe('expectation', () => {
     it('computes the expectation of a fair dice', () => {
-        const fair_dice = info.uniform(range(1, 6))
+        const fair_dice = info.uniform(util.range(1, 6))
         expect(info.expectation(fair_dice)).toBeCloseTo(3.5)
     })
 })

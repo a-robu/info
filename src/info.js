@@ -11,7 +11,7 @@ function plogp(p) {
 }
 
 function entropy(pdist) {
-    return - sum(pdist.map(plogp))
+    return - util.sum(pdist.map(plogp))
 }
 
 //function conditional_entropy(pxytable) {
@@ -29,8 +29,8 @@ function conditional_table(pxytable) {
 //}
 
 function normalize(pxvec) {
-    const precomputed_sum = sum(pxvec)
-    return map(vec, x => x / precomputed_sum)
+    const precomputed_sum = util.sum(pxvec)
+    return util.map(vec, x => x / precomputed_sum)
 }
 
 function uniform(iterable) {
@@ -44,7 +44,7 @@ function uniform(iterable) {
 }
 
 function expectation(vec) {
-    return util.sum(util.values(util.map((val, p) => p * val)))
+    return util.sum(util.values(util.map((val, p) => p * val), vec))
 }
 
 exports.plogp = plogp
