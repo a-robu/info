@@ -29,6 +29,13 @@ const vegetable_color = {
 //VegCol.space() -> {('tomato', 'red'), ...}
 //VegCol['tomat', 'red']
 
+
+describe('outcome_i', () => {
+	it('computes the surprisal of an event which was inevitable', () => {
+		expect(info.outcome_i(1)).toEqual(0)
+    })
+})
+
 describe('h', () => {
     it('calculates H(x), the ammount of entropy of a random var', () => {
         expect(info.h([0, 1])).toBe(0); // absolute certanty
@@ -116,9 +123,20 @@ describe('func_ev', () => {
         expect(info.func_ev(domain, f, p)).toBeCloseTo(1.5)
     })
     it('does not evaluate f if the probability is 0', () => {
-        throw new Error('test not implemented')
+		let spy = jasmine.createSpy()
+		info.func_ev([0, 1], spy, x => x)
+		expect(spy).not.toHaveBeenCalledWith(0)
     })
 })
+
+describe('map_ev', () => {
+    it('also does not evaluate f if the probability is 0', () => {
+		let spy = jasmine.createSpy()
+		info.map_ev([0, 1], spy)
+		expect(spy).not.toHaveBeenCalledWith(0)
+    })
+})
+
 
 describe('cond_h', () => {
     it('computes the H(color|vegetable)', () => {

@@ -36,7 +36,7 @@ function decompose_space(xyvec) {
 
 //E(f)
 function func_ev(domain, f, p) {
-    return sum(Array.from(domain).map(x => (p(x) > 0 ? p(x) * f(x): 0)))
+    return sum(Array.from(domain).filter(x => p(x) > 0).map(x => p(x) * f(x)))
 }
 
 function uniform(iterable) {
@@ -73,13 +73,24 @@ function marginalize(xyvec, i) {
     return make_vec(wanted_domain, val => marginal(xyvec, i, val))
 }
 
-function i(p) {
-    return Math.log2(1 / p)
+
+//I(X = x) self information associated with an outcome
+function outcome_i(p) {
+	if (p == 0) {
+		throw new Error('this function is not defined for p(x) = 0')
+	}
+	return Math.log2(1 / p)
+}
+
+//E[F(P(X))]
+function map_ev(vec, f) {
+	//because the keys of vecs get turned into strings
+	return func_ev(Object.keys(vec), x => f(vec[x]), vec_to_func(vec))
 }
 
 //H(X)
 function h(vec) {
-    return func_ev(Object.keys(vec), i, vec_to_func(vec))
+	return map_ev(vec, outcome_i)
 }
 
 //E(X)
@@ -103,12 +114,14 @@ function mi(xyvec) {
 exports.slice = slice
 exports.decompose_space = decompose_space
 exports.func_ev = func_ev
+exports.map_ev = map_ev
 exports.ev = ev
 exports.uniform = uniform
 exports.normalize = normalize
 exports.lock_var = lock_var
 exports.marginal = marginal
 exports.marginalize = marginalize
+exports.outcome_i = outcome_i
 exports.h = h
 exports.cond_h = cond_h
 exports.mi = mi
