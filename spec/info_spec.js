@@ -1,9 +1,6 @@
-jest.unmock('../util')
-jest.unmock('../info')
-jest.unmock('../table_matching')
-const util = require('../util')
-const info = require('../info')
-const table_matching = require('../table_matching')
+const util = require('../src/util')
+const info = require('../src/info')
+const table_matching = require('../src/table_matching')
 
 describe('plog', () => {
     it('calculates p * log2(p)', () => {

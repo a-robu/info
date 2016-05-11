@@ -1,11 +1,5 @@
-'use strict'
-jest.unmock('zip-array')
-jest.unmock('array-range')
-jest.unmock('array-range')
-jest.unmock('../table_matching')
-jest.unmock('../exception')
-const table_matching = require('../table_matching')
-const exception = require('../exception')
+const table_matching = require('../src/table_matching')
+const exception = require('../src/exception')
 
 describe('list_sizes_match', () => {
     it('returns true if both lists have the same length', () => {
