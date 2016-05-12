@@ -9,14 +9,16 @@
   "author": "Andrei Robu",
   "license": "ISC",
   "dependencies": {
+    "array-all": "^1.0.0",
     "array-range": "^1.0.1",
     "compute-sum": "^2.0.0",
+    "object-filter": "^1.0.2",
     "object-values": "^1.0.0",
     "object.map": "^0.2.0",
+    "sets-equal": "^1.0.0",
     "zip-array": "^1.0.1"
   },
   "devDependencies": {
-    "gulp": "git+https://git@github.com/gulpjs/gulp.git#4.0",
     "jasmine": "^2.4.1"
   }
 }

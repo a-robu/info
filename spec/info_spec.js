@@ -1,16 +1,23 @@
 const util = require('../src/util')
 const info = require('../src/info')
-const table_matching = require('../src/table_matching')
+const vec_matchers = require('../src/vec_matchers')
 
-describe('plog', () => {
-    it('calculates p * log2(p)', () => {
-        expect(info.plogp(0.5)).toBe(-0.5)
-        expect(info.plogp(1)).toBe(0)
-    })    
-    it('handles p = 0, the math explosion', () => {
-        expect(info.plogp(0)).toBe(0)
+
+beforeEach(() => {
+    jasmine.addMatchers({
+        toVecEqual: vec_matchers.toVecEqual
     })
 })
+
+//            red    orange 
+//  tomato    0.4    0.1
+//  orange    0.2    0.3
+const vegetable_color = {
+    [JSON.stringify(['tomato', 'red'])]: 0.4,
+    [JSON.stringify(['tomato', 'orange'])]: 0.1,
+    [JSON.stringify(['orange', 'red'])]: 0.2,
+    [JSON.stringify(['orange', 'orange'])]: 0.3,
+}
 
 describe('entropy', () => {
     it('calculates H(x), the ammount of entropy of a random var', () => {
@@ -20,38 +27,45 @@ describe('entropy', () => {
 });
 
 describe('normalize', () => {
-    it('makes a list sum up to 1', () => {
-        expect(info.normalize([10, 10, 20])).toEqual([0.25, 0.25, 0.5])
+    it('makes a vec sum up to 1', () => {
+        expect(info.normalize({
+            'a': 10, 
+            'b': 10, 
+            'c': 20
+        })).toVecEqual({
+            'a': 0.25,
+            'b': 0.25,
+            'c': 0.5
+        })
     })
 })
 
-describe('conditional_table', () => {
-    beforeEach(() => {
-        jasmine.addMatchers(table_matching.custom_matchers)
-    })
-    it('returns something', () => {
-        const obtained = info.conditional_table([[1]])
-        expect(obtained).not.toBe(undefined)
-    })
-    it('returns a table', () => {
-        const obtained = info.conditional_table([[1, 2], [3, 4], [5, 6]])
-        expect(obtained).toBeTable()
-    })
-    it('returns a table of the same size', () => {
-        const sample = [[0, 1], [2, 3], [4, 5]]
-        expect(table_matching.table_sizes_match(
-            info.conditional_table(sample), sample)).toBe(true)
-    })
-    it('normalizes by row', () => {
-        expect(info.conditional_table([
-            [0.40, 0.40],
-            [0.05, 0.15]
-        ])).toTableEqual([
-            [0.50, 1.50],
-            [0.25, 0.75]
-        ])
+describe('slice', () => {
+    it('returns a slice of the p. space without normalizing', () => {
+        expect(info.slice(vegetable_color, 'orange')).toEqual({
+            'tomato': 0.1,
+            'orange': 0.3
+        })
     })
 })
+
+describe('cond_vec', () => {
+    it('returns the p dist of x after given a value for y', () => {
+        expect(info.cond_vec(vegetable_color, 'orange')).toVecEqual({
+            'tomato': 1 / 4,
+            'orange': 3 / 4
+        })
+    })
+})
+
+// describe('conditional_vec', () => {
+//     it('computes the P(X|Y=y) p. distribution', () => {
+//         //            red    orange 
+//         //  tomato    0.4    0.1
+//         //  orange    0.2    0.3
+//         expect(info.conditional_vec(vegetable_color)
+//     })
+// })
 
 describe('uniform', () => {
     it('generates a fair coin', () => {
@@ -64,8 +78,69 @@ describe('uniform', () => {
 
 describe('expectation', () => {
     it('computes the expectation of a fair dice', () => {
-        const fair_dice = info.uniform(util.range(1, 6))
+        const fair_dice = info.uniform(util.range(1, 7))
         expect(info.expectation(fair_dice)).toBeCloseTo(3.5)
     })
 })
 
+// describe('outcomes', () => {
+//     it('returns a map of x posteriors after measuring y', () => {
+        //            red    orange 
+        //  tomato    0.4    0.1
+        //  orange    0.2    0.3
+        //       
+        // expect(info.outcomes({
+        //     [JSON.stringify(['tomato', 'red'])]: 0.4,
+        //     [JSON.stringify(['tomato', 'orange'])]: 0.1,
+        //     [JSON.stringify(['orange', 'red'])]: 0.2,
+        //     [JSON.stringify(['orange', 'orange'])]: 0.3,
+        // })).toEqual({
+        //     'red': {
+        //         'tomato': 3 / 2,
+        //         'orange': 1 / 2
+        //     },
+        //     'orange': {
+        //         'tomato': 1 / 4,
+        //         'orange': 3 / 4
+        //     }
+        // })
+        
+        // bayes(joint, red)
+        //     -> 'tomato'
+        //         'orange'
+        
+        //E(jointp) use (y set) (y p)
+        // E_yp y -> H(outcome_after_y)
+        
+        // E      Y OUTCOME 
+                        // VAL-> P(X|y) apply H()
+                        // P-> P(y)
+                        
+        // expectation(yset -> p, valmapper H(condp))
+                        
+        
+        // E(condp)
+        
+        // marginalize_y -> red -> 0.6
+        
+        //decompose_space()[1]
+        // left = decompose_space[0]
+        // right = decompose_space[1]
+        // iterate over right
+        //     (left, right) / p(red)
+        //     #
+            
+            
+        // conditional_p()
+        
+        // pick_second()
+        // bucket(joint_space, refine_y)
+        
+        // H{cond_p() * cond_vec()}
+        // marginalize(y)[k] * conditional_vec(joint,
+        
+        
+        // marginal_p()
+         
+//     })
+// })
