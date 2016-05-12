@@ -1,5 +1,6 @@
 const util = require('../src/util')
 const info = require('../src/info')
+const sets_equal = require('../src/util').sets_equal
 const vec_matchers = require('../src/vec_matchers')
 
 
@@ -58,14 +59,11 @@ describe('cond_vec', () => {
     })
 })
 
-// describe('conditional_vec', () => {
-//     it('computes the P(X|Y=y) p. distribution', () => {
-//         //            red    orange 
-//         //  tomato    0.4    0.1
-//         //  orange    0.2    0.3
-//         expect(info.conditional_vec(vegetable_color)
-//     })
-// })
+describe('cond_p', () => {
+    it('returns the p that y will take the give value', () => {
+        expect(info.cond_p(vegetable_color, 'orange')).toBeCloseTo(4 / 10)
+    })
+})
 
 describe('uniform', () => {
     it('generates a fair coin', () => {
@@ -83,64 +81,48 @@ describe('expectation', () => {
     })
 })
 
-// describe('outcomes', () => {
-//     it('returns a map of x posteriors after measuring y', () => {
-        //            red    orange 
-        //  tomato    0.4    0.1
-        //  orange    0.2    0.3
-        //       
-        // expect(info.outcomes({
-        //     [JSON.stringify(['tomato', 'red'])]: 0.4,
-        //     [JSON.stringify(['tomato', 'orange'])]: 0.1,
-        //     [JSON.stringify(['orange', 'red'])]: 0.2,
-        //     [JSON.stringify(['orange', 'orange'])]: 0.3,
-        // })).toEqual({
-        //     'red': {
-        //         'tomato': 3 / 2,
-        //         'orange': 1 / 2
-        //     },
-        //     'orange': {
-        //         'tomato': 1 / 4,
-        //         'orange': 3 / 4
-        //     }
-        // })
-        
-        // bayes(joint, red)
-        //     -> 'tomato'
-        //         'orange'
-        
-        //E(jointp) use (y set) (y p)
-        // E_yp y -> H(outcome_after_y)
-        
-        // E      Y OUTCOME 
-                        // VAL-> P(X|y) apply H()
-                        // P-> P(y)
-                        
-        // expectation(yset -> p, valmapper H(condp))
-                        
-        
-        // E(condp)
-        
-        // marginalize_y -> red -> 0.6
-        
-        //decompose_space()[1]
-        // left = decompose_space[0]
-        // right = decompose_space[1]
-        // iterate over right
-        //     (left, right) / p(red)
-        //     #
-            
-            
-        // conditional_p()
-        
-        // pick_second()
-        // bucket(joint_space, refine_y)
-        
-        // H{cond_p() * cond_vec()}
-        // marginalize(y)[k] * conditional_vec(joint,
-        
-        
-        // marginal_p()
-         
-//     })
-// })
+describe('cond_entropy', () => {
+    it('computes H(X|Y)', () => {
+        expect(info.cond_entropy(vegetable_color)).toBeCloseTo(0.8754)
+    })
+})
+
+describe('joint_from_table', () => {
+    it('returns a joint p dist given table notation', () => {
+        expect(info.joint_from_table([
+            [6, 7],
+            [8, 9]
+        ])).toVecEqual({
+            [JSON.stringify([0, 0])]: 6,
+            [JSON.stringify([0, 1])]: 7,
+            [JSON.stringify([1, 0])]: 8,
+            [JSON.stringify([1, 1])]: 9
+        })
+    })
+})
+
+describe('mutual_information', () => {
+    it('returns 0 if the variables are independend', () => {
+        expect('not implemented').toBe(true)
+    })
+})
+
+describe('decompose_space', () => {
+    beforeEach(() => {
+        jasmine.addCustomEqualityTester((first, second) => {
+            if (first instanceof Set && second instanceof Set) {
+                return sets_equal(first, second)
+            }
+        })
+    })
+    it('decomposes states from join p dist', () => {
+        expect(info.decompose_space(vegetable_color)).toEqual([
+            new Set(['tomato', 'orange']),
+            new Set(['red', 'orange'])
+        ])
+        expect(info.decompose_space(vegetable_color)).not.toEqual([
+            new Set(['cabbage', 'rocket']),
+            new Set(['doll', 'moon'])
+        ])
+    })
+})
