@@ -121,13 +121,50 @@ function mutual_information(xyvec) {
     return entropy(marginalize(xyvec, 0)) - cond_entropy(xyvec)
 }
 
-function alt_mi(xyvec) {
-    return sum(values(map(xyvec, str => {
-        let state_list = JSON.parse(str)
-        pxy = xyvec[str]
-        px = cond_p(state_list[0])
-        return 
-    })))
+// function alt_mi(xyvec) {
+//     return sum(values(map(xyvec, str => {
+//         let state_list = JSON.parse(str)
+//         pxy = xyvec[str]
+//         px = cond_p(state_list[0])
+//         return 
+//     })))
+// }
+
+//P(X = x)
+function px(xyvec, x) {
+    return pi(xyvec, 0, x)
+}
+
+//P(Y = y)
+function py(xyvec, y) {
+    return pi(xyvec, 1, y)
+}
+
+//P(I = j)
+function pi(xyvec, i, j) {
+    return sum(values(slice_along(xyvec, i, j)))
+}
+
+function mi(xyvec) {
+    let px_precomputed = {}
+    for (let ix of decompose_space(xyvec)[0]) {
+        px_precomputed[ix] = px(xyvec, ix)
+    }
+    let py_precomputed = {}
+    for (let iy of decompose_space(xyvec)[1]) {
+        py_precomputed[iy] = py(xyvec, iy)
+    }
+    let sum = 0
+    for (let xystr of Object.keys(xyvec)) {
+        let [ix, iy] = JSON.parse(xystr)
+        let pxy = xyvec[xystr]
+        let px = px_precomputed[ix]
+        let py = py_precomputed[iy]
+        if (pxy) {
+            sum += pxy * Math.log2(pxy / (px * py))
+        }
+    }
+    return sum
 }
 
 exports.plogp = plogp
@@ -141,5 +178,6 @@ exports.cond_p = cond_p
 exports.cond_entropy = cond_entropy
 exports.decompose_space = decompose_space
 exports.mutual_information = mutual_information
+exports.mi = mi
 exports.marginalize = marginalize
 exports.joint_from_table = joint_from_table

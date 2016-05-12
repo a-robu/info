@@ -124,15 +124,31 @@ describe('marginalize', () => {
     })
 })
 
-describe('mutual_information', () => {
+// describe('mutual_information', () => {
+//     it('returns 0 if the variables are independent', () => {
+//         expect(info.mutual_information(info.joint_from_table([
+//             [0.25, 0.25],
+//             [0.25, 0.25]
+//         ]))).toBeCloseTo(0)
+//     })
+//     it('returns 1 for two matching coins', () => {
+//         expect(info.mutual_information(info.joint_from_table([
+//             [0.5, 0],
+//             [0, 0.5]
+//         ]))).toBeCloseTo(1)
+//     })
+// })
+
+
+describe('mi', () => {
     it('returns 0 if the variables are independent', () => {
-        expect(info.mutual_information(info.joint_from_table([
+        expect(info.mi(info.joint_from_table([
             [0.25, 0.25],
             [0.25, 0.25]
         ]))).toBeCloseTo(0)
     })
     it('returns 1 for two matching coins', () => {
-        expect(info.mutual_information(info.joint_from_table([
+        expect(info.mi(info.joint_from_table([
             [0.5, 0],
             [0, 0.5]
         ]))).toBeCloseTo(1)
