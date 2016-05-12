@@ -39,6 +39,14 @@ describe('normalize', () => {
             'c': 0.5
         })
     })
+    it('throws an error if the vector is just zeroes', () => {
+        expect(() => {
+            info.normalize({
+                'a': 0,
+                'b': 0
+            })
+        }).toThrow()
+    })
 })
 
 describe('slice', () => {
@@ -101,9 +109,33 @@ describe('joint_from_table', () => {
     })
 })
 
+describe('marginalize', () => {
+    it('marginalizes the first variable from a joint dist', () => {
+        expect(info.marginalize(vegetable_color, 0)).toVecEqual({
+            'tomato': 5 / 10,
+            'orange': 5 / 10
+        })
+    })
+    it('marginalizes the second variable from a joint dist', () => {
+        expect(info.marginalize(vegetable_color, 1)).toVecEqual({
+            'red': 6 / 10,
+            'orange': 4 / 10
+        })
+    })
+})
+
 describe('mutual_information', () => {
-    it('returns 0 if the variables are independend', () => {
-        expect('not implemented').toBe(true)
+    it('returns 0 if the variables are independent', () => {
+        expect(info.mutual_information(info.joint_from_table([
+            [0.25, 0.25],
+            [0.25, 0.25]
+        ]))).toBeCloseTo(0)
+    })
+    it('returns 1 for two matching coins', () => {
+        expect(info.mutual_information(info.joint_from_table([
+            [0.5, 0],
+            [0, 0.5]
+        ]))).toBeCloseTo(1)
     })
 })
 

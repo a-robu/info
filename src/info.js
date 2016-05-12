@@ -13,27 +13,40 @@ function plogp(p) {
     return p * Math.log2(p)
 }
 
+//H(X)
 function entropy(vec) {
     return - util.sum(util.values(vec).map(plogp))
 }
 
-function slice(xyvec, yval) {
+function slice_along(xyvec, lock_along_i, val) {
     let result = {}
-    for (let rowstr of Object.keys(xyvec)) {
-        let [x, y] = JSON.parse(rowstr)
-        if (y == yval) {
-            result[x] = xyvec[rowstr]
+    for (let state_str of Object.keys(xyvec)) {
+        let state_list = JSON.parse(state_str)
+        if (state_list.length > 2) {
+            throw new Error('Not implemented 3-dimensional state space')
+        }
+        if (state_list[lock_along_i] == val) {
+            result[state_list[1 - lock_along_i]] = xyvec[state_str]
         }
     }
     return result
 }
 
+function slice(xyvec, yval) {
+    return slice_along(xyvec, 1, yval)
+}
+
+// function slice_xy(xyvec, yval) {
+//     return slice(xyvec, 0, 1, yval)
+// }
+
+//P(X|Y = y)
 function cond_vec(xyvec, yval) {
     return normalize(slice(xyvec, yval))
 }
 
 function cond_p(xyvec, yval) {
-    return sum(values(slice(xyvec, yval)))
+    return sum(values(slice_along(xyvec, 1, val)))
 }
 
 function decompose_space(xyvec) {
@@ -50,6 +63,7 @@ function decompose_space(xyvec) {
     return vars
 }
 
+//H(X|Y)
 function cond_entropy(xyvec) {
     let yset = decompose_space(xyvec)[1]
     let prob_to_entropy = {}
@@ -59,12 +73,11 @@ function cond_entropy(xyvec) {
     return expectation(prob_to_entropy)
 }
 
-function conditional_table(pxytable) {
-    return pxytable.map(row => normalize(row))
-}
-
 function normalize(vec) {
     const precomputed_sum = util.sum(util.values(vec))
+    if (precomputed_sum === 0) {
+        throw new Error('Cannot normalize the zero vector.')
+    }
     return util.object_map(vec, x => x / precomputed_sum)
 }
 
@@ -78,6 +91,7 @@ function uniform(iterable) {
     return vector
 }
 
+//E(X)
 function expectation(vec) {
     return util.sum(util.values(util.object_map(vec, (p, num) => parseFloat(p) * num)))
 }
@@ -92,6 +106,30 @@ function joint_from_table(table) {
     return vec
 }
 
+//P(ith)
+function marginalize(xyvec, i) {
+    let vec = {}
+    //... I need a diagram. LOL
+    for (let val of decompose_space(xyvec)[i]) {
+        vec[val] = sum(values(slice_along(xyvec, i, val)))
+    }
+    return vec
+}
+
+//I(X;Y)
+function mutual_information(xyvec) {
+    return entropy(marginalize(xyvec, 0)) - cond_entropy(xyvec)
+}
+
+function alt_mi(xyvec) {
+    return sum(values(map(xyvec, str => {
+        let state_list = JSON.parse(str)
+        pxy = xyvec[str]
+        px = cond_p(state_list[0])
+        return 
+    })))
+}
+
 exports.plogp = plogp
 exports.entropy = entropy
 exports.normalize = normalize
@@ -102,5 +140,6 @@ exports.cond_vec = cond_vec
 exports.cond_p = cond_p
 exports.cond_entropy = cond_entropy
 exports.decompose_space = decompose_space
-exports.conditional_table = conditional_table
+exports.mutual_information = mutual_information
+exports.marginalize = marginalize
 exports.joint_from_table = joint_from_table
