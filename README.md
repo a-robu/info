@@ -5,7 +5,7 @@ let info = require('info')
 info.h(uniform(new Set([1, 2, 3, 4, 5, 6]))) // -> 3.5
 ```
 
-This is how you write a probability distributions
+This is how you write a probability distribution
 (mapping event names to probabilities).
 ```javascript
 let fair_coin = {
