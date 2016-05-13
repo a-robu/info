@@ -1,8 +1,9 @@
-const util = require('../src/util')
-const info = require('../src/info')
-const sets_equal = require('../src/util').sets_equal
 const vec_matchers = require('../src/vec_matchers')
+const table_notation = require('../src/util').table_notation
+const sets_equal = require('../src/util').sets_equal 
+const range = require('../src/util').range
 
+const info = require('../src/info')
 
 beforeEach(() => {
     jasmine.addMatchers({
@@ -20,10 +21,18 @@ const vegetable_color = {
     [JSON.stringify(['orange', 'orange'])]: 0.3,
 }
 
-describe('entropy', () => {
+//Hmm maybe an oop style would also work here :))
+//VegCol.only('Veg')
+//VegCol.only('Col').h()
+//VegCol.mi()
+//VegCol.vars() -> {'Veg', 'Col'}
+//VegCol.space() -> {('tomato', 'red'), ...}
+//VegCol['tomat', 'red']
+
+describe('h', () => {
     it('calculates H(x), the ammount of entropy of a random var', () => {
-        expect(info.entropy([0, 1])).toBe(0); // absolute certanty
-        expect(info.entropy([0.5, 0.5])).toBe(1); //perfect coin toss
+        expect(info.h([0, 1])).toBe(0); // absolute certanty
+        expect(info.h([0.5, 0.5])).toBe(1); //perfect coin toss
     });
 });
 
@@ -51,25 +60,25 @@ describe('normalize', () => {
 
 describe('slice', () => {
     it('returns a slice of the p. space without normalizing', () => {
-        expect(info.slice(vegetable_color, 'orange')).toEqual({
+        expect(info.slice(vegetable_color, 1, 'orange')).toEqual({
             'tomato': 0.1,
             'orange': 0.3
         })
     })
 })
 
-describe('cond_vec', () => {
-    it('returns the p dist of x after given a value for y', () => {
-        expect(info.cond_vec(vegetable_color, 'orange')).toVecEqual({
+describe('lock_var', () => {
+    it('compute the p dist of vegetable after being given the color orange', () => {
+        expect(info.lock_var(vegetable_color, 1, 'orange')).toVecEqual({
             'tomato': 1 / 4,
             'orange': 3 / 4
         })
     })
 })
 
-describe('cond_p', () => {
-    it('returns the p that y will take the give value', () => {
-        expect(info.cond_p(vegetable_color, 'orange')).toBeCloseTo(4 / 10)
+describe('marginal', () => {
+    it('computes the probability that the object is an orange ', () => {
+        expect(info.marginal(vegetable_color, 1, 'orange')).toBeCloseTo(4 / 10)
     })
 })
 
@@ -84,7 +93,7 @@ describe('uniform', () => {
 
 describe('ev', () => {
     it('computes the expectation of a fair dice', () => {
-        const fair_dice = info.uniform(util.range(1, 7))
+        const fair_dice = info.uniform(range(1, 7))
         expect(info.ev(fair_dice)).toBeCloseTo(3.5)
     })
 })
@@ -93,8 +102,8 @@ describe('func_ev', () => {
     it('computes the expected value on a uniform p dist', () => {
         const domain = new Set([1, 2, 3])
         const f = x => x + 1
-        const p = 1 / 3
-        expect(info.func_ev([domain, f, p]).toBeCloseTo(3))
+        const p = x => 1 / 3
+        expect(info.func_ev(domain, f, p)).toBeCloseTo(3)
     })
     it('computes the expected value of a function that takes strings', () => {
         const domain = new Set(['red', 'green'])
@@ -104,28 +113,13 @@ describe('func_ev', () => {
         const p = function(x) {
             return 1 / 2
         }
-        vec_as_func
         expect(info.func_ev(domain, f, p)).toBeCloseTo(1.5)
     })
 })
 
-describe('cond_entropy', () => {
-    it('computes H(X|Y)', () => {
-        expect(info.cond_entropy(vegetable_color)).toBeCloseTo(0.8754)
-    })
-})
-
-describe('joint_from_table', () => {
-    it('returns a joint p dist given table notation', () => {
-        expect(info.joint_from_table([
-            [6, 7],
-            [8, 9]
-        ])).toVecEqual({
-            [JSON.stringify([0, 0])]: 6,
-            [JSON.stringify([0, 1])]: 7,
-            [JSON.stringify([1, 0])]: 8,
-            [JSON.stringify([1, 1])]: 9
-        })
+describe('cond_h', () => {
+    it('computes the H(color|vegetable)', () => {
+        expect(info.cond_h(vegetable_color, 1)).toBeCloseTo(0.8754)
     })
 })
 
@@ -144,31 +138,15 @@ describe('marginalize', () => {
     })
 })
 
-// describe('mutual_information', () => {
-//     it('returns 0 if the variables are independent', () => {
-//         expect(info.mutual_information(info.joint_from_table([
-//             [0.25, 0.25],
-//             [0.25, 0.25]
-//         ]))).toBeCloseTo(0)
-//     })
-//     it('returns 1 for two matching coins', () => {
-//         expect(info.mutual_information(info.joint_from_table([
-//             [0.5, 0],
-//             [0, 0.5]
-//         ]))).toBeCloseTo(1)
-//     })
-// })
-
-
 describe('mi', () => {
     it('returns 0 if the variables are independent', () => {
-        expect(info.mi(info.joint_from_table([
+        expect(info.mi(table_notation([
             [0.25, 0.25],
             [0.25, 0.25]
         ]))).toBeCloseTo(0)
     })
     it('returns 1 for two matching coins', () => {
-        expect(info.mi(info.joint_from_table([
+        expect(info.mi(table_notation([
             [0.5, 0],
             [0, 0.5]
         ]))).toBeCloseTo(1)

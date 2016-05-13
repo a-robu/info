@@ -1,4 +1,12 @@
+const vec_matchers = require('../src/vec_matchers')
+
 const util = require('../src/util')
+
+beforeEach(() => {
+    jasmine.addMatchers({
+        toVecEqual: vec_matchers.toVecEqual
+    })
+})
 
 describe('sum', () => {
     it('adds numbers in a list', () => {
@@ -40,5 +48,19 @@ describe('vec_to_func', () => {
         expect(util.vec_to_func(vec)('red')).toEqual(1)
         expect(util.vec_to_func(vec)('blue')).toEqual(2)
         expect(util.vec_to_func(vec)('The color of Love')).toBe(undefined)
+    })
+})
+
+describe('table_notation', () => {
+    it('returns a joint p dist given table notation', () => {
+        expect(util.table_notation([
+            [6, 7],
+            [8, 9]
+        ])).toVecEqual({
+            [JSON.stringify([0, 0])]: 6,
+            [JSON.stringify([0, 1])]: 7,
+            [JSON.stringify([1, 0])]: 8,
+            [JSON.stringify([1, 1])]: 9
+        })
     })
 })

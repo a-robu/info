@@ -1,8 +1,8 @@
 {
   "name": "info",
-  "version": "0.0.0",
-  "description": "",
-  "main": "index.js",
+  "version": "1.0.0",
+  "description": "Computes Information Theory functions",
+  "main": "src/info.js",
   "scripts": {
     "test": "./node ./node_modules/jest-cli/bin/jest.js"
   },
