@@ -30,3 +30,15 @@ describe('range', () => {
         expect(util.range(1, 4)).toEqual([1, 2, 3])
     })
 })
+
+describe('vec_to_func', () => {
+    it('wrapps a vector into a function', () => {
+        const vec = {
+            red: 1,
+            blue: 2
+        }
+        expect(util.vec_to_func(vec)('red')).toEqual(1)
+        expect(util.vec_to_func(vec)('blue')).toEqual(2)
+        expect(util.vec_to_func(vec)('The color of Love')).toBe(undefined)
+    })
+})

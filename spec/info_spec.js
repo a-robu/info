@@ -82,10 +82,30 @@ describe('uniform', () => {
     })
 })
 
-describe('expectation', () => {
+describe('ev', () => {
     it('computes the expectation of a fair dice', () => {
         const fair_dice = info.uniform(util.range(1, 7))
-        expect(info.expectation(fair_dice)).toBeCloseTo(3.5)
+        expect(info.ev(fair_dice)).toBeCloseTo(3.5)
+    })
+})
+
+describe('func_ev', () => {
+    it('computes the expected value on a uniform p dist', () => {
+        const domain = new Set([1, 2, 3])
+        const f = x => x + 1
+        const p = 1 / 3
+        expect(info.func_ev([domain, f, p]).toBeCloseTo(3))
+    })
+    it('computes the expected value of a function that takes strings', () => {
+        const domain = new Set(['red', 'green'])
+        const f = function(x) {
+            return (x == 'red') ? 1 : 2
+        }
+        const p = function(x) {
+            return 1 / 2
+        }
+        vec_as_func
+        expect(info.func_ev(domain, f, p)).toBeCloseTo(1.5)
     })
 })
 
