@@ -32,7 +32,7 @@ Functions included:
 * **`mi(xyvec)`** computes I(X;Y), the mutual information between 
 two random variables. The argument it takes
 is the joint probability distribution.
-* **`cond_h(xyvec, i)`** gives the conditional conditional entropy;
+* **`cond_h(xyvec, i)`** computes the conditional entropy H(X|Y);
 the entropy left in the *ith* variable after the another one is given.
 
 
