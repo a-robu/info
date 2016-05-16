@@ -36,7 +36,7 @@ function decompose_space(xyvec) {
 
 //E(f)
 function func_ev(domain, f, p) {
-    return sum(Array.from(domain).map(x => p(x) * f(x)))
+    return sum(Array.from(domain).map(x => (p(x) > 0 ? p(x) * f(x): 0)))
 }
 
 function uniform(iterable) {
@@ -73,9 +73,13 @@ function marginalize(xyvec, i) {
     return make_vec(wanted_domain, val => marginal(xyvec, i, val))
 }
 
+function i(p) {
+    return Math.log2(1 / p)
+}
+
 //H(X)
 function h(vec) {
-    return sum(values(vec).filter(p => p > 0).map(p => p * Math.log2(1 / p)))
+    return func_ev(Object.keys(vec), i, vec_to_func(vec))
 }
 
 //E(X)

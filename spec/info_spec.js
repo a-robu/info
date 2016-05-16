@@ -115,6 +115,9 @@ describe('func_ev', () => {
         }
         expect(info.func_ev(domain, f, p)).toBeCloseTo(1.5)
     })
+    it('does not evaluate f if the probability is 0', () => {
+        throw new Error('test not implemented')
+    })
 })
 
 describe('cond_h', () => {
