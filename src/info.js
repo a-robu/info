@@ -111,6 +111,11 @@ function mi(xyvec) {
     return h(x) - cond_h(xyvec, 0)
 }
 
+function c(channel) {
+    let vec = uniform(Object.keys(channel))
+    throw new Error('Not implemented')
+}
+
 exports.slice = slice
 exports.decompose_space = decompose_space
 exports.func_ev = func_ev
@@ -125,3 +130,4 @@ exports.outcome_i = outcome_i
 exports.h = h
 exports.cond_h = cond_h
 exports.mi = mi
+exports.c = c

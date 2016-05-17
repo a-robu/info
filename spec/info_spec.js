@@ -137,7 +137,6 @@ describe('map_ev', () => {
     })
 })
 
-
 describe('cond_h', () => {
     it('computes the H(color|vegetable)', () => {
         expect(info.cond_h(vegetable_color, 1)).toBeCloseTo(0.8754)
@@ -191,5 +190,29 @@ describe('decompose_space', () => {
             new Set(['cabbage', 'rocket']),
             new Set(['doll', 'moon'])
         ])
+    })
+})
+
+describe('c', () => {
+    it('computes the channel capacity of a perfect bit carrier', () => {
+        let simple_channel = {
+            0: {0: 1, 1: 0},
+            1: {0: 0, 1: 1}
+        }
+        expect(info.c(simple_channel)).toBeCloseTo(1)
+    })
+    it('computes the channel capacity of a perfect bit flipper', () => {
+        let flipper_channel = {
+            0: {0: 0, 1: 1},
+            1: {0: 1, 1: 0}
+        }
+        expect(info.c(flipper_channel)).toBeCloseTo(1)
+    })
+    it('computes the channel capacity of a really poor channel', () => {
+        let very_poor_channel = {
+            0: {0: 1, 1: 0},
+            1: {0: 1, 1: 0}
+        }
+        expect(info.c(very_poor_channel)).toBeCloseTo(0)
     })
 })
