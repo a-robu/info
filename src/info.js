@@ -111,9 +111,42 @@ function mi(xyvec) {
     return h(x) - cond_h(xyvec, 0)
 }
 
+function channel_transmitter_space(channel) {
+    return new Set(Object.keys(channel)) 
+}
+
+function channel_receiver_space(channel) {
+    //we're assuming that the channel object was passed in good,
+    //that all the transmissions give the same receiver space (alphabet)
+    let any_transmission = Object.keys(channel)[0]
+    return new Set(Object.keys(channel[any_transmission]))
+}
+
 function c(channel) {
-    let vec = uniform(Object.keys(channel))
-    throw new Error('Not implemented')
+    let actions = channel_transmitter_space(channel)
+    let locations = channel_receiver_space(channel)
+    let vec = uniform(actions)
+    let prev_computed_c = null
+    let computed_c
+    let d = (action, vec) => {
+        return sum(Array.from(locations).map(location => {
+            let cond = channel[action][location]
+            let some_weird_calculation = sum(Array.from(actions).map(other_action => {
+                return channel[other_action][location] * vec[other_action]
+            }))
+            return cond * Math.log2(cond / some_weird_calculation)
+        }))
+    }
+    while (true) {
+        vec = normalize(object_map(vec, (_, action, vec) => {
+            return Math.pow(2, d(action, vec))
+        }))
+        computed_c = sum(Array.from(actions).map(action => vec[action] * d(action)))
+        if (prev_computed_c !== null && Math.abs(computed_c - prev_computed_c) < 0.000001) {
+            return computed_c
+        }
+        prev_computed_c = computed_c
+    }
 }
 
 exports.slice = slice
@@ -130,4 +163,6 @@ exports.outcome_i = outcome_i
 exports.h = h
 exports.cond_h = cond_h
 exports.mi = mi
+exports.channel_transmitter_space = channel_transmitter_space
+exports.channel_receiver_space = channel_receiver_space
 exports.c = c

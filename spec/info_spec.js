@@ -9,6 +9,11 @@ beforeEach(() => {
     jasmine.addMatchers({
         toVecEqual: vec_matchers.toVecEqual
     })
+    jasmine.addCustomEqualityTester((first, second) => {
+        if (first instanceof Set && second instanceof Set) {
+            return sets_equal(first, second)
+        }
+    })
 })
 
 //            red    orange 
@@ -174,13 +179,6 @@ describe('mi', () => {
 })
 
 describe('decompose_space', () => {
-    beforeEach(() => {
-        jasmine.addCustomEqualityTester((first, second) => {
-            if (first instanceof Set && second instanceof Set) {
-                return sets_equal(first, second)
-            }
-        })
-    })
     it('decomposes states from join p dist', () => {
         expect(info.decompose_space(vegetable_color)).toEqual([
             new Set(['tomato', 'orange']),
@@ -214,5 +212,15 @@ describe('c', () => {
             1: {0: 1, 1: 0}
         }
         expect(info.c(very_poor_channel)).toBeCloseTo(0)
+    })
+})
+
+describe('channel_transmitter_space', () => {
+    it('returns the random variable of the transmitter as a set', () => {
+        let channel = {
+            'up': {},
+            'down': {}
+        }
+        expect(info.channel_transmitter_space(channel)).toEqual(new Set(['up', 'down']))
     })
 })
