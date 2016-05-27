@@ -224,3 +224,29 @@ describe('channel_transmitter_space', () => {
         expect(info.channel_transmitter_space(channel)).toEqual(new Set(['up', 'down']))
     })
 })
+
+describe('apply_channel', () => {
+    it('returns p(x) given p(x|y) and p(y)', () => {
+        let after_rain = {
+            'grass-wet': 0.8,
+            'grass-dry': 0.2
+        } 
+        let after_not_rain = {
+            'grass-wet': 0.3,
+            'grass-dry': 0.7
+        }
+        let channel = {
+            'it-rained': after_rain,
+            'it-did-not-rain': after_not_rain
+        }
+        expect(info.apply_channel(channel, {'it-rained': 1})).toVecEqual(after_rain)
+        expect(info.apply_channel(channel, {'it-did-not-rain': 1})).toVecEqual(after_not_rain)
+    }) 
+    it('lerps correctly', () => {
+        let channel = {
+            'a': {'x': 0.1},
+            'b': {'x': 0.5}
+        }
+        expect(info.apply_channel(channel, {'a': 0.5, 'b': 0.5})).toVecEqual({'x': 0.3})
+    })
+})

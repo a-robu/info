@@ -122,33 +122,23 @@ function channel_receiver_space(channel) {
     return new Set(Object.keys(channel[any_transmission]))
 }
 
-function c(channel) {
-    let actions = channel_transmitter_space(channel)
-    let locations = channel_receiver_space(channel)
-    let vec = uniform(actions)
-    let prev_computed_c = null
-    let computed_c
-    let d = (action, vec) => {
-        return sum(Array.from(locations).map(location => {
-            let cond = channel[action][location]
-            let some_weird_calculation = sum(Array.from(actions).map(other_action => {
-                return channel[other_action][location] * vec[other_action]
-            }))
-            return cond * Math.log2(cond / some_weird_calculation)
+//returns p(x) given p(x|y) and p(y)
+function apply_channel(channel, yvec) {
+    let result = {}
+    for (let xval of channel_receiver_space(channel)) {
+        result[xval] = sum(Object.keys(yvec).map(yval => {
+            return channel[yval][xval] * yvec[yval]
         }))
     }
-    while (true) {
-        vec = normalize(object_map(vec, (_, action, vec) => {
-            return Math.pow(2, d(action, vec))
-        }))
-        computed_c = sum(Array.from(actions).map(action => vec[action] * d(action)))
-        if (prev_computed_c !== null && Math.abs(computed_c - prev_computed_c) < 0.000001) {
-            return computed_c
-        }
-        prev_computed_c = computed_c
-    }
+    return result
 }
 
+function c(channel) {
+// I.   p(s) = SUM_a p(s|a) p(a)
+// II.  p'(a) = 1/Z * p(a) exp(SUM_s p(s|a) log(p(s|a)/p(s)))
+}
+
+exports.apply_channel = apply_channel
 exports.slice = slice
 exports.decompose_space = decompose_space
 exports.func_ev = func_ev
