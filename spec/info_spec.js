@@ -333,7 +333,3 @@ describe('repair_receiver_space', () => {
         })
     })
 })
-
-describe('sets_union', () => {
-    throw 'it is not implemeted'
-})

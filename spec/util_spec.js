@@ -1,10 +1,16 @@
 const vec_matchers = require('../src/vec_matchers')
+const sets_equal = require('../src/util').sets_equal
 
 const util = require('../src/util')
 
 beforeEach(() => {
     jasmine.addMatchers({
         toVecEqual: vec_matchers.toVecEqual
+    })
+    jasmine.addCustomEqualityTester((first, second) => {
+        if (first instanceof Set && second instanceof Set) {
+            return sets_equal(first, second)
+        }
     })
 })
 
@@ -62,5 +68,13 @@ describe('table_notation', () => {
             [JSON.stringify([1, 0])]: 8,
             [JSON.stringify([1, 1])]: 9
         })
+    })
+})
+
+describe('sets_union', () => {
+    it('returns elements from both sets', () => {
+        expect(util.sets_union(new Set(['a']), new Set(['b']))).toEqual(
+            new Set(['a', 'b'])
+        )
     })
 })

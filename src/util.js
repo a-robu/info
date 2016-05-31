@@ -24,12 +24,13 @@ exports.make_vec = (domain, f) => {
     }
     return vec
 }
-exports.sets_union = (set_list) => {
+exports.sets_union = (set_a, set_b) => {
     let result = new Set()
-    for (let set in set_list) {
-        for (let element in set) {
-            result.add(element)
-        }
+    for (let element in set_a) {
+        result.add(element)
+    }
+    for (let element in set_b) {
+        result.add(element)
     }
     return result
 }
