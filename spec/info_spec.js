@@ -303,3 +303,37 @@ describe('make_jointxy', () => {
         })
     })
 })
+
+describe('repair_receiver_space', () => {
+    it('fills in the zeroes in the reception distributions', () => {
+        expect(info.repair_receiver_space({
+            'go-left': {
+                'left': 1
+            },
+            'go-right': {
+                'right': 1
+            },
+            'get-confused': {
+                'left': 0.5,
+                'right': 0.5
+            }
+        })).toEqual({
+            'go-left': {
+                'left': 1,
+                'right': 0
+            },
+            'go-right': {
+                'left': 0,
+                'right': 1
+            },
+            'get-confused': {
+                'left': 0.5,
+                'right': 0.5
+            }
+        })
+    })
+})
+
+describe('sets_union', () => {
+    throw 'it is not implemeted'
+})

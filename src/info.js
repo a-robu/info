@@ -135,6 +135,21 @@ function channel_receiver_space(channel) {
     return new Set(Object.keys(channel[any_transmission]))
 }
 
+function repair_receiver_space(channel) {
+    let blank_obj = {}
+    for (let reception of values(channel)) {
+        for (let val of Object.keys(reception)) {
+            blank_obj[val] = 0
+        }
+    }
+    let fixed_channel = {}
+    for (let key of Object.keys(channel)) {
+        let reception = channel[key]
+        fixed_channel[key] = Object.assign(Object.assign({}, blank_obj), reception)
+    }
+    return fixed_channel
+}
+
 //returns P(X) given P(X|Y) and P(Y)
 function apply_channel(channel, yvec) {
     let result = {}
@@ -193,4 +208,5 @@ exports.channel_transmitter_space = channel_transmitter_space
 exports.channel_receiver_space = channel_receiver_space
 exports.kl = kl
 exports.make_jointxy = make_jointxy
+exports.repair_receiver_space = repair_receiver_space
 exports.c = c
