@@ -105,10 +105,23 @@ function cond_h(xyvec, i) {
     return func_ev(var_domain, val_h, val => marginal(xyvec, i, val))
 }
 
+//P(X, Y) given P(X|Y) and P(Y)
+function make_jointxy(channel, pyvec) {
+    let result = {}
+    let xkeys = channel_receiver_space(channel)
+    let ykeys = channel_transmitter_space(channel)
+    for (let yval of ykeys) {
+        for (var xval of xkeys) {
+            result[JSON.stringify([xval, yval])] = channel[yval][xval] * pyvec[yval]
+        }
+    }
+    return result
+}
+
 //I(X;Y) given P(X, Y)
 function mi(xyvec) {
     const x = marginalize(xyvec, 0)
-    return h(x) - cond_h(xyvec, 0)
+    return h(x) - cond_h(xyvec, 1)
 }
 
 function channel_transmitter_space(channel) {
@@ -122,7 +135,7 @@ function channel_receiver_space(channel) {
     return new Set(Object.keys(channel[any_transmission]))
 }
 
-//returns p(x) given p(x|y) and p(y)
+//returns P(X) given P(X|Y) and P(Y)
 function apply_channel(channel, yvec) {
     let result = {}
     for (let xval of channel_receiver_space(channel)) {
@@ -133,9 +146,32 @@ function apply_channel(channel, yvec) {
     return result
 }
 
+function plogpq(p, q) {
+    if (p == 0) {
+        return 0
+    }
+    else if (q == 0) {
+        return Infinity
+    }
+    else {
+        return p * Math.log2(p / q)
+    }
+}
+
+function kl(p1vec, p2vec) {
+    return sum(Object.keys(p1vec).map(val => plogpq(p1vec[val], p2vec[val])))
+}
+
 function c(channel) {
-// I.   p(s) = SUM_a p(s|a) p(a)
-// II.  p'(a) = 1/Z * p(a) exp(SUM_s p(s|a) log(p(s|a)/p(s)))
+    let vec = uniform(channel_transmitter_space(channel))
+    //TODO iterate until the error < THRESHOLD instead of fixed times
+    for (let _ = 0; _ < 20; _++) {
+        let output = apply_channel(channel, vec)
+        vec = normalize(object_map(vec, (p, val) => {
+            return p * Math.exp(kl(apply_channel(channel[val], output)))
+        }))
+    }
+    return mi(make_jointxy(channel, vec))
 }
 
 exports.apply_channel = apply_channel
@@ -155,4 +191,6 @@ exports.cond_h = cond_h
 exports.mi = mi
 exports.channel_transmitter_space = channel_transmitter_space
 exports.channel_receiver_space = channel_receiver_space
+exports.kl = kl
+exports.make_jointxy = make_jointxy
 exports.c = c

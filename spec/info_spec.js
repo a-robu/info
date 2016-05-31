@@ -146,6 +146,18 @@ describe('cond_h', () => {
     it('computes the H(color|vegetable)', () => {
         expect(info.cond_h(vegetable_color, 1)).toBeCloseTo(0.8754)
     })
+    it('works with blank columns', () => {
+        expect(info.cond_h(table_notation([
+            [0.5, 0],
+            [0.5, 0]
+        ]), 0)).toBeCloseTo(0)
+    })
+    it('works with blank rows', () => {
+        expect(info.cond_h(table_notation([
+            [0.5, 0.5],
+            [0, 0]
+        ]), 0)).toBeCloseTo(1)
+    })
 })
 
 describe('marginalize', () => {
@@ -175,6 +187,18 @@ describe('mi', () => {
             [0.5, 0],
             [0, 0.5]
         ]))).toBeCloseTo(1)
+    })
+    it('works with blank columns', () => {
+        expect(info.mi(table_notation([
+            [0.5, 0],
+            [0.5, 0]
+        ]))).toBeCloseTo(0)
+    })
+    it('works with blank rows', () => {
+        expect(info.mi(table_notation([
+            [0.5, 0.5],
+            [0, 0]
+        ]))).toBeCloseTo(0)
     })
 })
 
@@ -248,5 +272,34 @@ describe('apply_channel', () => {
             'b': {'x': 0.5}
         }
         expect(info.apply_channel(channel, {'a': 0.5, 'b': 0.5})).toVecEqual({'x': 0.3})
+    })
+})
+
+describe('kl', () => {
+    it('is zero if p = q', () => {
+        expect(info.kl([0.2, 0.4, 0.4], [0.2, 0.4, 0.4])).toEqual(0)
+    })
+    it('is positive if p != q', () => {
+        expect(info.kl([0.9, 0.05, 0.05], [0.2, 0.4, 0.4])).toBeGreaterThan(0)
+    })
+})
+
+describe('make_jointxy', () => {
+    it('makes a joint p dist given a cond and a marginal', () => {
+        expect(info.make_jointxy({
+            'a': {
+                'x': 0.5,
+                'y': 0.5
+            },
+            'b': {
+                'x': 0,
+                'y': 1
+            }
+        }, {'a': 0.4, 'b': 0.6})).toVecEqual({
+            [JSON.stringify(['x', 'a'])]: 0.5 * 0.4, 
+            [JSON.stringify(['y', 'a'])]: 0.5 * 0.4,
+            [JSON.stringify(['x', 'b'])]: 0 * 0.6,
+            [JSON.stringify(['y', 'b'])]: 1 * 0.6
+        })
     })
 })

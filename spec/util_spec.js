@@ -14,7 +14,7 @@ describe('sum', () => {
     })
 })
 
-describe('map', () => {
+describe('object_map', () => {
     it('applies the function to all the values', () => {
         expect(util.object_map({
             'a': 3,
