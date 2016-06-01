@@ -26,10 +26,10 @@ exports.make_vec = (domain, f) => {
 }
 exports.sets_union = (set_a, set_b) => {
     let result = new Set()
-    for (let element in set_a) {
+    for (let element of set_a) {
         result.add(element)
     }
-    for (let element in set_b) {
+    for (let element of set_b) {
         result.add(element)
     }
     return result

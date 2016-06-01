@@ -66,10 +66,19 @@ describe('table_notation', () => {
     })
 })
 
+describe('make_vec', () => {
+    it('compiles the values of the func in a vec', () => {
+        expect(util.make_vec(new Set([1, 3, 5]), x => x * x)).toEqual({
+            1: 1,
+            3: 9,
+            5: 25
+        })
+    })
+})
+
 describe('sets_union', () => {
     it('returns elements from both sets', () => {
         let actual = util.sets_union(new Set(['a']), new Set(['b']))
-        let expected = new Set(['a', 'bb'])
-        expect(actual).toEqual(expected)
+        expect(actual).toEqual(new Set(['a', 'b']))
     })
 })

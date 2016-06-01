@@ -30,9 +30,17 @@ describe('best_action', () => {
     })
 })
 
-describe('empowerment', () => {
+describe('evaluate_state', () => {
     it('returns a number', () => {
-        expect(empowerment.evaluate_state(tunnel_game, 0)).toEqual(jasmine.any(Number))
+        expect(empowerment.evaluate_state(tunnel_game, {0: 1})).toEqual(jasmine.any(Number))
+    })
+})
+
+describe('all_actions', () => {
+    it('returns all the actions possible from a set of states', () => {
+        expect(info.all_actions({succ: pos => {
+            return pos == 'a': new Set('x') ? new Set('y')
+        }}))
     })
 })
 
