@@ -7,11 +7,6 @@ beforeEach(() => {
     jasmine.addMatchers({
         toVecEqual: vec_matchers.toVecEqual
     })
-    jasmine.addCustomEqualityTester((first, second) => {
-        if (first instanceof Set && second instanceof Set) {
-            return sets_equal(first, second)
-        }
-    })
 })
 
 describe('sum', () => {
@@ -73,8 +68,8 @@ describe('table_notation', () => {
 
 describe('sets_union', () => {
     it('returns elements from both sets', () => {
-        expect(util.sets_union(new Set(['a']), new Set(['b']))).toEqual(
-            new Set(['a', 'b'])
-        )
+        let actual = util.sets_union(new Set(['a']), new Set(['b']))
+        let expected = new Set(['a', 'bb'])
+        expect(actual).toEqual(expected)
     })
 })

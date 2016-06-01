@@ -7,14 +7,23 @@ const info = require('../src/info')
 
 beforeEach(() => {
     jasmine.addMatchers({
-        toVecEqual: vec_matchers.toVecEqual
+        toVecEqual: vec_matchers.toVecEqual,
     })
     jasmine.addCustomEqualityTester((first, second) => {
+        let make_set_to_str = (set) => {
+            return () => 'Set ' + JSON.stringify(Array.from(set))
+        }
         if (first instanceof Set && second instanceof Set) {
-            return sets_equal(first, second)
+            let are_equal = sets_equal(first, second)
+            if (!are_equal) {
+                first.toString = make_set_to_str(first)
+                second.toString = make_set_to_str(second)
+            }
+            return are_equal
         }
     })
 })
+
 
 //            red    orange 
 //  tomato    0.4    0.1
