@@ -1,5 +1,6 @@
 const vec_matchers = require('../src/vec_matchers')
 const sets_equal = require('../src/util').sets_equal
+const values = require('../src/util').values
 
 const util = require('../src/util')
 
@@ -80,5 +81,68 @@ describe('sets_union', () => {
     it('returns elements from both sets', () => {
         let actual = util.sets_union(new Set(['a']), new Set(['b']))
         expect(actual).toEqual(new Set(['a', 'b']))
+    })
+})
+
+describe('blank_vec', () => {
+    it('returns a vector with the same keys as the set it is given', () => {
+        let set = new Set(['x', 'y', 'z'])
+        expect(new Set(Object.keys(util.blank_vec(set)))).toEqual(set)
+    })
+    it('returns a zeroes vector', () => {
+        expect(values(util.blank_vec(['a', 'b', 'c']))).toEqual([0, 0, 0])
+    })
+})
+
+describe('lerp_vecs', () => {
+    it('returns a returns a linear combination of vectors', () => {
+        expect(util.lerp_vecs([
+            {'a': 0.1, 'b': 0.9},
+            {'a': 0.5, 'b': 0.5}
+        ], {0: 0.5, 1: 0.5})).toEqual(
+            {'a': 0.3, 'b': 0.7}
+        )
+    })
+    it('uses zero for missing values of when lerping', () => {
+        expect(util.lerp_vecs([
+            {'a': 1},
+            {'b': 1}
+        ], {0: 0.5, 1: 0.5})).toEqual({'a': 0.5, 'b': 0.5})
+    })
+})
+
+describe('many_sets_union', () => {
+    it('returns the union of a list of sets', () => {
+        expect(util.many_sets_union([
+            new Set(['a', 'b']),
+            new Set(['b', 'c']),
+            new Set(['d', 'e'])
+        ])).toEqual(new Set(['a', 'b', 'c', 'd', 'e']))
+    })
+})
+
+describe('sharp_vec', () => {
+    it('returns a p vector with zeroes everywhere except at p(x = i)', () => {
+        expect(util.sharp_vec(2, 4)).toEqual({
+            0: 0, 1: 0, 2: 1, 3: 0
+        })
+    })
+})
+
+describe('vec_strip_zeroes', () => {
+    it('returns a new vector without the zero components', () => {
+        expect(util.vec_strip_zeroes({'a': 0, 'b': 1})).toEqual({'b': 1})
+    })
+})
+
+describe('max', () => {
+    it('returns the max value of a list', () => {
+        expect(util.max([1, 2, 3, 2])).toEqual(3)
+    })
+    it('can also iterate over a set', () => {
+        expect(util.max(new Set([1, 2, 3, 2]))).toEqual(3)
+    })
+    it('accepts key function as an argument', () => {
+        expect(util.max([1, 2, 3, 2], x => - x)).toEqual(1)
     })
 })

@@ -1,6 +1,7 @@
 const values = require('./util').values
 const all = require('./util').all
 const sets_equal = require('./util').sets_equal
+const vec_strip_zeroes = require('./util').vec_strip_zeroes
 const StateSpaceMismatch = require('./exception').StateSpaceMismatch
 
 function compare_floats(actual, expected, precision) {
@@ -28,6 +29,18 @@ exports.toVecEqual = (util, customEqualityTesters) => {
         compare: (actual, expected) => {
             let result = {}
             result.pass = all(values(vec_diff(actual, expected)))
+            return result
+        }
+    }
+}
+exports.toProbEqual = (util, customEqualityTesters) => {
+    return {
+        compare: (actual, expected) => {
+            let result = {}
+            result.pass = all(values(vec_diff(
+                vec_strip_zeroes(actual), 
+                vec_strip_zeroes(expected)
+            )))
             return result
         }
     }
