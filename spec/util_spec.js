@@ -121,14 +121,6 @@ describe('many_sets_union', () => {
     })
 })
 
-describe('sharp_vec', () => {
-    it('returns a p vector with zeroes everywhere except at p(x = i)', () => {
-        expect(util.sharp_vec(2, 4)).toEqual({
-            0: 0, 1: 0, 2: 1, 3: 0
-        })
-    })
-})
-
 describe('vec_strip_zeroes', () => {
     it('returns a new vector without the zero components', () => {
         expect(util.vec_strip_zeroes({'a': 0, 'b': 1})).toEqual({'b': 1})

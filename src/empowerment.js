@@ -3,7 +3,6 @@ const vec_to_func = require('./util').vec_to_func
 const object_map = require('./util').object_map
 const sets_union = require('./util').sets_union
 const lerp_vecs = require('./util').lerp_vecs
-const sharp_vec = require('./util').sharp_vec
 const max = require('./util').max
 
 function best_action(game, svec) {

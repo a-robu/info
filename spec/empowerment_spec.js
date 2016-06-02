@@ -22,6 +22,9 @@ describe('evaluate_state', () => {
         let actual = empowerment.evaluate_state(_tunnel_game, {0: 1})
         expect(actual).toEqual(jasmine.any(Number))
     })
+    // it('considers the center to be most empowered')
+    //     let actual = empowerment.evaluate_state(_tunnel_game, {0: 1})
+    //     expect(actual).toEqual(jasmine.any(Number))
 })
 
 describe('evaluate_action', () => {

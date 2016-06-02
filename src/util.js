@@ -83,18 +83,8 @@ function max(list, key = x => x) {
     return max_val
 }
 
-function sharp_vec (i, size) {
-    let blank = blank_vec(range(size))
-    for (let _; _ < size; _++) {
-        blank[_] = 0
-    }
-    blank[i] = 1
-    return blank
-}
-
 exports.many_sets_union = many_sets_union
 exports.lerp_vecs = lerp_vecs
-exports.sharp_vec = sharp_vec
 exports.max = max
 exports.blank_vec = blank_vec
 exports.vec_to_func = vec_to_func
