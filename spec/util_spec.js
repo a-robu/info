@@ -1,6 +1,7 @@
 const vec_matchers = require('../src/vec_matchers')
 const sets_equal = require('../src/util').sets_equal
 const values = require('../src/util').values
+const vec_to_func = require('../src/util').vec_to_func
 
 const util = require('../src/util')
 
@@ -136,5 +137,10 @@ describe('max', () => {
     })
     it('accepts key function as an argument', () => {
         expect(util.max([1, 2, 3, 2], x => - x)).toEqual(1)
+    })
+    it('works on other kinds of values', () => {
+        let vals = ['a', 'b', 'c']
+        let keyfunc = vec_to_func({a: 2, b: 3, c: 1})
+        expect(util.max(vals, keyfunc)).toEqual('b')
     })
 })

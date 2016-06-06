@@ -70,17 +70,16 @@ function vec_strip_zeroes(vec) {
 }
 
 function max(list, key = x => x) {
-    let max_val = Array.from(list)[0]
-    for (let val of list) {
-        let keyed_val = key(val)
-        if (typeof keyed_val === "undefined") {
-            throw new Error('Assertion failed: key must return a value.')
-        }
-        if (keyed_val > max_val) {
-            max_val = val
+    let max_i = Array.from(list)[0]
+    let max_output = Number.NEGATIVE_INFINITY
+    for (let i of list) {
+        let computed_output = key(i)
+        if (computed_output > max_output) {
+            max_i = i
+            max_output = computed_output
         }
     }
-    return max_val
+    return max_i
 }
 
 exports.many_sets_union = many_sets_union

@@ -22,15 +22,29 @@ describe('evaluate_state', () => {
         let actual = empowerment.evaluate_state(_tunnel_game, {0: 1})
         expect(actual).toEqual(jasmine.any(Number))
     })
-    // it('considers the center to be most empowered')
-    //     let actual = empowerment.evaluate_state(_tunnel_game, {0: 1})
-    //     expect(actual).toEqual(jasmine.any(Number))
+    it('considers the center to be most empowered', () => {
+        let left = empowerment.evaluate_state(_tunnel_game, {0: 1})
+        let mid = empowerment.evaluate_state(_tunnel_game, {1: 1})
+        let right = empowerment.evaluate_state(_tunnel_game, {2: 1})
+        expect(mid).toBeGreaterThan(left)
+        expect(mid).toBeGreaterThan(right)
+    })
 })
 
 describe('evaluate_action', () => {
     it('returns a number', () => {
         let actual = empowerment.evaluate_action(_tunnel_game, {0: 1}, 'go-right')
         expect(actual).toEqual(jasmine.any(Number))
+    })
+    it('considers moving towards the center more empowering than standing', () => {
+        let go_right = empowerment.evaluate_action(_tunnel_game, {0: 1}, 'go-right')
+        let stay = empowerment.evaluate_action(_tunnel_game, {0: 1}, 'stay-here')
+        expect(go_right).toBeGreaterThan(stay)
+    })
+    it('considers moving away from center less empowering than standing', () => {
+        let go_right = empowerment.evaluate_action(_tunnel_game, {1: 1}, 'go-right')
+        let stay = empowerment.evaluate_action(_tunnel_game, {1: 1}, 'stay-here')
+        expect(go_right).toBeLessThan(stay)
     })
 })
 
