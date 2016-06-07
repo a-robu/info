@@ -193,6 +193,10 @@ function bin_h(p) {
     return h([p, 1 - p])
 }
 
+function make_bac(p, q) {
+    return [[1 - p, p], [q, 1 - q]]
+}
+
 exports.apply_channel = apply_channel
 exports.slice = slice
 exports.decompose_space = decompose_space
@@ -215,4 +219,18 @@ exports.make_jointxy = make_jointxy
 exports.repair_receiver_space = repair_receiver_space
 exports.c = c
 exports.bin_h = bin_h
-exports.c_bac = c_bac
+
+if (!module.parent) {
+    let percentages = (n) => range(n).map(x => x / n)
+    console.log('Running info benchmark.')
+    let start = (new Date()).getTime()
+    let times = 100
+    for (let p of percentages(times)) {
+        for (let q of percentages(times)) {
+            c(make_bac(p, q))
+        }
+    }
+    let end = (new Date()).getTime()
+    console.log('Ran c(make_bac(p, q)) for ' + (times * times) + ' times.')
+    console.log('Duration: '+ (end - start) + 'ms. ' + ((end - start) / (times * times)) + 'ms per execution.')
+}
