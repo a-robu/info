@@ -189,6 +189,10 @@ function c(channel) {
     return mi(make_jointxy(channel, vec))
 }
 
+function bin_h(p) {
+    return h([p, 1 - p])
+}
+
 exports.apply_channel = apply_channel
 exports.slice = slice
 exports.decompose_space = decompose_space
@@ -210,3 +214,5 @@ exports.kl = kl
 exports.make_jointxy = make_jointxy
 exports.repair_receiver_space = repair_receiver_space
 exports.c = c
+exports.bin_h = bin_h
+exports.c_bac = c_bac

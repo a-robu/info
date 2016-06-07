@@ -10,7 +10,7 @@ function best_action(game, svec) {
 }
 
 function all_actions(game, svec) {
-    let list_of_sets = Object.keys(svec).map(action => game.succ(action))
+    let list_of_sets = Object.keys(svec).map(state => game.succ(state))
     return list_of_sets.reduce((a, b) => sets_union(a, b), new Set())
 }
 

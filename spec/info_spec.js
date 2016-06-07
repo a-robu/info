@@ -313,6 +313,14 @@ describe('make_jointxy', () => {
     })
 })
 
+describe('bin_h', () => {
+    it('computes the binary entropy function', () => {
+        expect(info.bin_h(0)).toEqual(0)
+        expect(info.bin_h(1)).toEqual(0)
+        expect(info.bin_h(0.5)).toEqual(1)
+    })
+})
+
 describe('repair_receiver_space', () => {
     it('fills in the zeroes in the reception distributions', () => {
         expect(info.repair_receiver_space({
