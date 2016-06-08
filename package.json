@@ -2,9 +2,9 @@
   "name": "info",
   "version": "1.0.0",
   "description": "Computes Information Theory functions",
-  "main": "src/info.js",
+  "main": "src/exposed.js",
   "scripts": {
-    "test": "./node ./node_modules/jest-cli/bin/jest.js"
+    "test": "./jasmine"
   },
   "author": "Andrei Robu",
   "license": "ISC",
