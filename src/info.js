@@ -177,16 +177,16 @@ function kl(p1vec, p2vec) {
     return sum(Object.keys(p1vec).map(val => plogpq(p1vec[val], p2vec[val])))
 }
 
-function c(channel) {
+function c(channel, iters = 20) {
     let vec = uniform(channel_transmitter_space(channel))
     //TODO iterate until the error < THRESHOLD instead of fixed times
-    for (let _ = 0; _ < 20; _++) {
+    for (let _ = 0; _ < iters; _++) {
         let output = apply_channel(channel, vec)
         vec = normalize(object_map(vec, (p, val) => {
             return p * Math.exp(kl(apply_channel(channel[val], output)))
         }))
     }
-    return mi(make_jointxy(channel, vec))
+    return Math.max(0, mi(make_jointxy(channel, vec))) //in case the value is like -0.00000000001
 }
 
 function bin_h(p) {
