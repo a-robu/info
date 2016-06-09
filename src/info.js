@@ -177,16 +177,30 @@ function kl(p1vec, p2vec) {
     return sum(Object.keys(p1vec).map(val => plogpq(p1vec[val], p2vec[val])))
 }
 
-function c(channel, iters = 20) {
-    let vec = uniform(channel_transmitter_space(channel))
-    //TODO iterate until the error < THRESHOLD instead of fixed times
-    for (let _ = 0; _ < iters; _++) {
-        let output = apply_channel(channel, vec)
-        vec = normalize(object_map(vec, (p, val) => {
-            return p * Math.exp(kl(apply_channel(channel[val], output)))
-        }))
+function blahut_step(channel, vec) {
+    let output = apply_channel(channel, vec)
+    return normalize(object_map(vec, (p, val) => {
+        return p * Math.exp(kl(apply_channel(channel[val], output)))
+    }))
+}
+
+function blahut_mi(channel, vec) {
+    return Math.max(0, mi(make_jointxy(channel, vec)))
+}
+
+function blahut_error(channel, prev, now) {
+    return Math.abs(blahut_mi(channel, prev) - blahut_mi(channel, now))
+}
+
+function c(channel, precision = 0.000001) {
+    let prev = uniform(channel_transmitter_space(channel))
+    let next
+    let error = Infinity
+    while (error > precision) {
+        next = blahut_step(channel, prev)
+        error = blahut_error(channel, next, prev)
     }
-    return Math.max(0, mi(make_jointxy(channel, vec))) //in case the value is like -0.00000000001
+    return blahut_mi(channel, next)
 }
 
 function bin_h(p) {
@@ -218,7 +232,11 @@ exports.kl = kl
 exports.make_jointxy = make_jointxy
 exports.repair_receiver_space = repair_receiver_space
 exports.c = c
+exports.blahut_step = blahut_step
+exports.blahut_mi = blahut_mi
+exports.blahut_error = blahut_error
 exports.bin_h = bin_h
+exports.make_bac = make_bac
 
 if (!module.parent) {
     let percentages = (n) => range(n).map(x => x / n)

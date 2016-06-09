@@ -224,6 +224,31 @@ describe('decompose_space', () => {
     })
 })
 
+describe('blahut_step', () => {
+    it('converges', () => {
+        let channel = info.make_bac(0.5, 1)
+        let far = [0.9, 0.1]
+        let closer = info.blahut_step(channel, far)
+        let even_closer = info.blahut_step(channel, closer)
+        let first_error = info.blahut_error(channel, far, closer)
+        let second_error = info.blahut_error(channel, closer, even_closer)
+        expect(second_error).toBeGreaterThan(first_error)
+    })
+})
+
+describe('blahut_mi', () => {
+    it('computes the mi for a given channel and a given P(X)', () => {
+        let nice_channel = {
+            0: [1, 0],
+            1: [0, 1]
+        }
+        let bad_idea = [1, 0]
+        let good_idea = [0.5, 0.5]
+        expect(info.blahut_mi(nice_channel, bad_idea)).toEqual(0)
+        expect(info.blahut_mi(nice_channel, good_idea)).toEqual(1)
+    })
+})
+
 describe('c', () => {
     it('computes the channel capacity of a perfect bit carrier', () => {
         let simple_channel = {
@@ -245,6 +270,23 @@ describe('c', () => {
             1: {0: 1, 1: 0}
         }
         expect(info.c(very_poor_channel)).toBeCloseTo(0)
+    })
+    it('computes correctly with a redundant input', () => {
+        let phonetics = {
+            'v': {'v': 1, 'f': 0, 'r': 0},
+            'f': {'v': 1, 'f': 0, 'r': 0},
+            'r': {'v': 0, 'f': 0, 'r': 1} 
+        }
+        expect(info.c(phonetics)).toBeCloseTo(2)
+    })
+    it('can compute to the required precision', () => {
+        // Computed by hand
+        // http://www.wolframalpha.com/input/?i=maximize+0.5+(1-x)+log2(1-x)+%2B+0.5(1-x)log2(x%2B1)+-+x+log2(0.5*(x+%2B+1))
+        let actual = 0.1389454481450766797174590106
+        let channel = info.make_bac(0.5, 1)
+        expect(info.c(channel, 0.01)).toBeCloseTo(actual, 1)
+        expect(info.c(channel, 0.01)).not.toBeCloseTo(actual, 5)
+        expect(info.c(channel, 0.0000001)).toBeCloseTo(actual, 4)
     })
 })
 
@@ -285,6 +327,12 @@ describe('apply_channel', () => {
 })
 
 describe('kl', () => {
+    it('computes the dk divergence', () => {
+        let p = [0.25, 0.75]
+        let q = [0.5, 0.5]
+        let actual = 0.18872187554
+        expect(info.kl(p, q)).toBeCloseTo(actual)
+    })
     it('is zero if p = q', () => {
         expect(info.kl([0.2, 0.4, 0.4], [0.2, 0.4, 0.4])).toEqual(0)
     })
