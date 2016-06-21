@@ -55,6 +55,3 @@ exports.emp = {
 
 ## Development
 Run `npm test` for jasmine unit tests.
-
-You can `source enter_env` to get `node` into your path. You can then
-`node --debug-brk jasmine.js` to debug the unit tests.
