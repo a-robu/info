@@ -54,9 +54,7 @@ exports.emp = {
 ```
 
 ## Development
-Running `./init` will download a local copy of node and will also
-run `./npm install`. You will be able to `./jasmine` test 
-your changes.
+Run `npm test` for jasmine unit tests.
 
 You can `source enter_env` to get `node` into your path. You can then
 `node --debug-brk jasmine.js` to debug the unit tests.

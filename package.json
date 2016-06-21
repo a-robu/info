@@ -4,7 +4,7 @@
   "description": "Computes Information Theory functions",
   "main": "src/exposed.js",
   "scripts": {
-    "test": "./jasmine"
+    "test": "node jasmine.js"
   },
   "author": "Andrei Robu",
   "license": "ISC",
