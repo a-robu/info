@@ -1,7 +1,3 @@
 *.swp
-.node-installation/
 coverage/
 node_modules/
-node
-npm
-.node-v*.tar.gz
