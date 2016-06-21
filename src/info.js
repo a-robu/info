@@ -177,10 +177,11 @@ function kl(p1vec, p2vec) {
     return sum(Object.keys(p1vec).map(val => plogpq(p1vec[val], p2vec[val])))
 }
 
-function blahut_step(channel, vec) {
-    let output = apply_channel(channel, vec)
-    return normalize(object_map(vec, (p, val) => {
-        return p * Math.exp(kl(apply_channel(channel[val], output)))
+function blahut_step(channel, pxvec) {
+    let pyvec = apply_channel(channel, pxvec)
+    return normalize(object_map(pxvec, (px, x) => {
+        let specific_outcome = channel[x]
+        return px * Math.exp(kl(specific_outcome, pyvec))
     }))
 }
 
@@ -192,13 +193,14 @@ function blahut_error(channel, prev, now) {
     return Math.abs(blahut_mi(channel, prev) - blahut_mi(channel, now))
 }
 
-function c(channel, precision = 0.000001) {
+function c(channel, precision = 0.000000001) {
     let prev = uniform(channel_transmitter_space(channel))
     let next
     let error = Infinity
     while (error > precision) {
         next = blahut_step(channel, prev)
         error = blahut_error(channel, next, prev)
+        prev = next
     }
     return blahut_mi(channel, next)
 }

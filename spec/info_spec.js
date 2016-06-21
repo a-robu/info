@@ -232,7 +232,7 @@ describe('blahut_step', () => {
         let even_closer = info.blahut_step(channel, closer)
         let first_error = info.blahut_error(channel, far, closer)
         let second_error = info.blahut_error(channel, closer, even_closer)
-        expect(second_error).toBeGreaterThan(first_error)
+        expect(second_error).toBeLessThan(first_error)
     })
 })
 
@@ -277,16 +277,7 @@ describe('c', () => {
             'f': {'v': 1, 'f': 0, 'r': 0},
             'r': {'v': 0, 'f': 0, 'r': 1} 
         }
-        expect(info.c(phonetics)).toBeCloseTo(2)
-    })
-    it('can compute to the required precision', () => {
-        // Computed by hand
-        // http://www.wolframalpha.com/input/?i=maximize+0.5+(1-x)+log2(1-x)+%2B+0.5(1-x)log2(x%2B1)+-+x+log2(0.5*(x+%2B+1))
-        let actual = 0.1389454481450766797174590106
-        let channel = info.make_bac(0.5, 1)
-        expect(info.c(channel, 0.01)).toBeCloseTo(actual, 1)
-        expect(info.c(channel, 0.01)).not.toBeCloseTo(actual, 5)
-        expect(info.c(channel, 0.0000001)).toBeCloseTo(actual, 4)
+        expect(info.c(phonetics)).toBeCloseTo(1)
     })
 })
 
@@ -334,6 +325,12 @@ describe('kl', () => {
         expect(info.kl(p, q)).toBeCloseTo(actual)
     })
     it('is zero if p = q', () => {
+        expect(info.kl([0.2, 0.4, 0.4], [0.2, 0.4, 0.4])).toEqual(0)
+    })
+    it('is zero if p = q', () => {
+        let ideal = [0.1, 0.9]
+        let close = [0.099, 0.901]
+        let far = [0.]
         expect(info.kl([0.2, 0.4, 0.4], [0.2, 0.4, 0.4])).toEqual(0)
     })
     it('is positive if p != q', () => {
