@@ -29,6 +29,12 @@ describe('evaluate_state', () => {
         expect(mid).toBeGreaterThan(left)
         expect(mid).toBeGreaterThan(right)
     })
+    it('works on the 2d world', () => {
+        //expected empowerment log(2 * Math.pow(2, k) + 2 * k + 1)
+        //game can go left, up, down, right
+        //k step empowerment cartesian product of k actions        
+        throw new Error('Not implemented')
+    })
 })
 
 describe('evaluate_action', () => {
