@@ -13,6 +13,7 @@ exports.channels = {
 exports.emp = {
     best_action: empowerment.best_action,
     all_actions: empowerment.all_actions,
-    evaluate_action: empowerment.evaluate_action
+    evaluate_action: empowerment.evaluate_action,
+    evaluate_state: empowerment.evaluate_state
 }
 
