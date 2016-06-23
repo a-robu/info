@@ -6,7 +6,7 @@ exports.mi = info.mi
 exports.cond_h = info.cond_h
 exports.c = info.c
 exports.kl = info.kl
-exports.util.normalize = info.normalize
+exports.util = {normalize: info.normalize}
 exports.channels = {
     make_bac: info.make_bac
 }
