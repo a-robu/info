@@ -44,6 +44,11 @@ of the channel using the *Blahut–Arimoto* algorithm.
 * **`kl(pxvec, pyvec)`** computes the 
 [Kullback–Leibler divergence](https://en.wikipedia.org/wiki/Kullback%E2%80%93Leibler_divergence)
 
+Some utilities
+```
+exports.util.normalize
+```
+
 And some other empowerment related stuff:
 ```
 exports.emp = {
