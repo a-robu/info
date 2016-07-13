@@ -79,3 +79,15 @@ describe('probabilistic_move', () => {
         }, 'go-right')).toProbEqual({0: 0, 1: 0.5, 2: 0.5})
     })
 })
+
+describe('maxmax', () => {
+    it('computes the maxmax empowerment value of a state distribution', () => {
+        throw new Error('not implemented')
+    })
+})
+
+describe('next_states', () => {
+    it('returns all the next states that could be reached given an origin', () => {
+        expect(next_states(empowerment._tunnel_game, 0)).toEqual(new Set([0, 1]))
+    })
+})

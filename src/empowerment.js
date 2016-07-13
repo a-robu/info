@@ -5,7 +5,7 @@ const sets_union = require('./util').sets_union
 const lerp_vecs = require('./util').lerp_vecs
 const max = require('./util').max
 
-function best_action(game, svec) {
+function best_action(game, svec, depth) {
     return max(all_actions(game, svec), action => evaluate_action(game, svec, action))
 }
 
@@ -37,6 +37,15 @@ function evaluate_action(game, svec, action) {
     return evaluate_state(game, there)
 }
 
+function next_states(game, s) {
+    let result = new Set()
+    for (let action of game.succ(s)) {
+        let possible_outcomes = new Set(Object.keys(game.move(s, action)))
+        result = sets_union(result, possible_outcomes)
+    }
+    return result
+}
+
 let _tunnel_game = {
     succ: function (pos) {
         return new Set(['go-left', 'stay-here', 'go-right'])
@@ -50,13 +59,30 @@ let _tunnel_game = {
     }
 }
 
+let _2d_diamond_game = {
+    succ: function (pos) {
+        return new Set(['go-left', 'go-right', 'go-up', 'go-down'])
+    },
+    move: function(pos, action) {
+        let [x, y] = JSON.parse(pos)
+        return {
+            'go-left': {[JSON.stringify(x - 1, y)]: 1},
+            'go-right': {[JSON.stringify(x + 1, y)]: 1},
+            'go-up': {[JSON.stringify(x, y + 1)]: 1},
+            'go-down': {[JSON.stringify(x, y - 1)]: 1}
+        }
+    }
+}
+
 exports.best_action = best_action
 exports.evaluate_state = evaluate_state
 exports.evaluate_action = evaluate_action
 exports.make_channel = make_channel
 exports.all_actions = all_actions
 exports.probabilistic_move = probabilistic_move
+exports.next_states = next_states
 exports._tunnel_game = _tunnel_game
+exports._2d_diamond_game = _2d_diamond_game
 
 if (!module.parent) {
     console.log('Testing on the tunnel game.')
