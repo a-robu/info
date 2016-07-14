@@ -32,8 +32,8 @@ describe('evaluate_state', () => {
     it('works on the 2d world', () => {
         //expected empowerment log(2 * Math.pow(2, k) + 2 * k + 1)
         //game can go left, up, down, right
-        //k step empowerment cartesian product of k actions        
-        throw new Error('Not implemented')
+        //k step empowerment cartesian product of k actions       
+        pending('not implemented')
     })
 })
 
@@ -82,7 +82,7 @@ describe('probabilistic_move', () => {
 
 describe('maxmax', () => {
     it('computes the maxmax empowerment value of a state distribution', () => {
-        throw new Error('not implemented')
+        pending('not implemented')
     })
 })
 

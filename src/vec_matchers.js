@@ -2,13 +2,18 @@ const values = require('./util').values
 const all = require('./util').all
 const sets_equal = require('./util').sets_equal
 const vec_strip_zeroes = require('./util').vec_strip_zeroes
-const StateSpaceMismatch = require('./exception').StateSpaceMismatch
 
 function compare_floats(actual, expected, precision) {
     precision = precision || 2
     return Math.abs(expected - actual) < (Math.pow(10, -precision) / 2)
     //copied from 
     //https://github.com/jasmine/jasmine/blob/v2.0.4/src/core/matchers/toBeCloseTo.js
+}
+
+const StateSpaceMismatch = {
+    name: "StateSpaceMismatch",
+    message: "The vectors should have the same keys.",
+    stack: 'no stack for you!'
 }
 
 function vec_diff(left, right) {
@@ -45,3 +50,4 @@ exports.toProbEqual = (util, customEqualityTesters) => {
         }
     }
 }
+exports.StateSpaceMismatch = StateSpaceMismatch

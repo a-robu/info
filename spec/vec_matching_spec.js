@@ -1,5 +1,4 @@
 const vec_matchers = require('../src/vec_matchers')
-const StateSpaceMismatch = require('../src/exception').StateSpaceMismatch
 
 beforeEach(() => {
     jasmine.addMatchers({
@@ -29,6 +28,6 @@ describe('toVecEqual', () => {
                 'a': 1,
                 'b': 2
             })
-        }).toThrow(StateSpaceMismatch)
+        }).toThrow(vec_matchers.StateSpaceMismatch)
     })
 })
