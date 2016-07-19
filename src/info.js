@@ -5,11 +5,13 @@ const range = require('./util').range
 const object_map = require('./util').object_map
 const make_vec = require('./util').make_vec
 const vec_to_func = require('./util').vec_to_func
+const x = require('./xoxo').x
+const o = require('./xoxo').o
 
 function slice(xyvec, var_i, val) {
     let result = {}
     for (let state_str of Object.keys(xyvec)) {
-        let state_list = JSON.parse(state_str)
+        let state_list = o(state_str)
         if (state_list.length > 2) {
             throw new Error('Not implemented: handle 3-dimensional state space')
         }
@@ -23,7 +25,7 @@ function slice(xyvec, var_i, val) {
 function decompose_space(xyvec) {
     let vars = []
     for (let keystr of Object.keys(xyvec)) {
-        let list = JSON.parse(keystr)
+        let list = o(keystr)
         for (let i of range(list.length)) {
             if (!vars[i]) {
                 vars[i] = new Set()
@@ -112,7 +114,7 @@ function make_jointxy(channel, pyvec) {
     let ykeys = channel_transmitter_space(channel)
     for (let yval of ykeys) {
         for (var xval of xkeys) {
-            result[JSON.stringify([xval, yval])] = channel[yval][xval] * pyvec[yval]
+            result[x(xval, yval)] = channel[yval][xval] * pyvec[yval]
         }
     }
     return result

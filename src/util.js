@@ -1,5 +1,6 @@
 const range = require('array-range')
 const values = require('object-values')
+const x = require('./xoxo').x
 
 function vec_to_func(vec) {
     return (key) => vec[key]
@@ -8,7 +9,7 @@ function table_notation(table) {
     let vec = {}
     for (let xi of range(table.length)) {
         for (let yi of range(table[0].length)) {
-            vec[JSON.stringify([xi, yi])] = table[xi][yi]
+            vec[x(xi, yi)] = table[xi][yi]
         }
     }
     return vec

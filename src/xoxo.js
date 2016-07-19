@@ -42,5 +42,6 @@ function unserialize(str) {
 
 exports.roundtrip = obj => unserialize(serialize(obj))
 exports.x = function() {return serialize([...arguments])}
+exports.o = unserialize
 exports.serialize = serialize
 exports.unserialize = unserialize

@@ -4,6 +4,7 @@ const values = require('../src/util').values
 const vec_to_func = require('../src/util').vec_to_func
 
 const util = require('../src/util')
+const x = require('../src/xoxo').x
 
 beforeEach(() => {
     jasmine.addMatchers({
@@ -60,10 +61,10 @@ describe('table_notation', () => {
             [6, 7],
             [8, 9]
         ])).toVecEqual({
-            [JSON.stringify([0, 0])]: 6,
-            [JSON.stringify([0, 1])]: 7,
-            [JSON.stringify([1, 0])]: 8,
-            [JSON.stringify([1, 1])]: 9
+            [x(0, 0)]: 6,
+            [x(0, 1)]: 7,
+            [x(1, 0)]: 8,
+            [x(1, 1)]: 9
         })
     })
 })

@@ -20,10 +20,10 @@ This is how you write a joint probability distribution:
 //  tomato    0.4    0.1
 //  orange    0.2    0.3
 const vegetable_color = {
-    [JSON.stringify(['tomato', 'red'])]: 0.4,
-    [JSON.stringify(['tomato', 'orange'])]: 0.1,
-    [JSON.stringify(['orange', 'red'])]: 0.2,
-    [JSON.stringify(['orange', 'orange'])]: 0.3,
+    [x('tomato', 'red')]: 0.4,
+    [x('tomato', 'orange')]: 0.1,
+    [x('orange', 'red')]: 0.2,
+    [x('orange', 'orange')]: 0.3,
 }
 ```
 

@@ -4,6 +4,7 @@ const object_map = require('./util').object_map
 const sets_union = require('./util').sets_union
 const lerp_vecs = require('./util').lerp_vecs
 const max = require('./util').max
+const o = require('./xoxo').o
 
 function best_action(game, svec, depth) {
     return max(all_actions(game, svec), action => evaluate_action(game, svec, action))
@@ -64,12 +65,12 @@ let _2d_diamond_game = {
         return new Set(['go-left', 'go-right', 'go-up', 'go-down'])
     },
     move: function(pos, action) {
-        let [x, y] = JSON.parse(pos)
+        let [x, y] = o(pos)
         return {
-            'go-left': {[JSON.stringify(x - 1, y)]: 1},
-            'go-right': {[JSON.stringify(x + 1, y)]: 1},
-            'go-up': {[JSON.stringify(x, y + 1)]: 1},
-            'go-down': {[JSON.stringify(x, y - 1)]: 1}
+            'go-left': {[x(x - 1, y)]: 1},
+            'go-right': {[x(x + 1, y)]: 1},
+            'go-up': {[x(x, y + 1)]: 1},
+            'go-down': {[x(x, y - 1)]: 1}
         }
     }
 }

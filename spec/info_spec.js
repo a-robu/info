@@ -3,6 +3,7 @@ const table_notation = require('../src/util').table_notation
 const sets_equal = require('../src/util').sets_equal 
 const range = require('../src/util').range
 
+const x = require('../src/xoxo').x
 const info = require('../src/info')
 
 beforeEach(() => {
@@ -11,7 +12,7 @@ beforeEach(() => {
     })
     jasmine.addCustomEqualityTester((first, second) => {
         let make_set_to_str = (set) => {
-            return () => 'Set ' + JSON.stringify(Array.from(set))
+            return () => 'Set ' + x(Array.from(set))
         }
         if (first instanceof Set && second instanceof Set) {
             let are_equal = sets_equal(first, second)
@@ -29,10 +30,10 @@ beforeEach(() => {
 //  tomato    0.4    0.1
 //  orange    0.2    0.3
 const vegetable_color = {
-    [JSON.stringify(['tomato', 'red'])]: 0.4,
-    [JSON.stringify(['tomato', 'orange'])]: 0.1,
-    [JSON.stringify(['orange', 'red'])]: 0.2,
-    [JSON.stringify(['orange', 'orange'])]: 0.3,
+    [x('tomato', 'red')]: 0.4,
+    [x('tomato', 'orange')]: 0.1,
+    [x('orange', 'red')]: 0.2,
+    [x('orange', 'orange')]: 0.3,
 }
 
 //Hmm maybe an oop style would also work here :))
@@ -350,10 +351,10 @@ describe('make_jointxy', () => {
                 'y': 1
             }
         }, {'a': 0.4, 'b': 0.6})).toVecEqual({
-            [JSON.stringify(['x', 'a'])]: 0.5 * 0.4, 
-            [JSON.stringify(['y', 'a'])]: 0.5 * 0.4,
-            [JSON.stringify(['x', 'b'])]: 0 * 0.6,
-            [JSON.stringify(['y', 'b'])]: 1 * 0.6
+            [x('x', 'a')]: 0.5 * 0.4, 
+            [x('y', 'a')]: 0.5 * 0.4,
+            [x('x', 'b')]: 0 * 0.6,
+            [x('y', 'b')]: 1 * 0.6
         })
     })
 })
