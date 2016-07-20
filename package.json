@@ -1,6 +1,6 @@
 {
   "name": "info",
-  "version": "1.1.6",
+  "version": "1.1.7",
   "description": "Computes Information Theory functions",
   "main": "src/exposed.js",
   "scripts": {
@@ -21,5 +21,7 @@
   "devDependencies": {
     "jasmine": "^2.4.1"
   },
-  "engines" : { "npm" : ">=6.1.0" }
+  "engines": {
+    "npm": ">=6.1.0"
+  }
 }
