@@ -1,6 +1,6 @@
 {
   "name": "info",
-  "version": "1.1.7",
+  "version": "1.1.8",
   "description": "Computes Information Theory functions",
   "main": "src/exposed.js",
   "scripts": {
