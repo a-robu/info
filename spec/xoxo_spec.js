@@ -32,4 +32,9 @@ describe('x', () => {
     it('takes multiple arguments', () => {
         expect(xoxo.x(1, 2)).toEqual(xoxo.serialize([1, 2]))
     })
+    it('throws an error if it cannot serialise that key', () => {
+        expect(() => {
+            xoxo.x(new Int16Array())
+        }).toThrowError(xoxo.CannotSerializeType)
+    })
 })

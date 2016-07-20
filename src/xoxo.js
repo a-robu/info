@@ -1,7 +1,6 @@
-const CannotSerializeType = {
-    name: "CannotSerializeType",
-    message: "Serializing this type is not implemented."
-}
+const ExtendableError = require('es6-error')
+
+class CannotSerializeType extends ExtendableError {}
 
 const JSON_FRIENDLY_TYPES = [
     'string', 'number'
@@ -22,7 +21,7 @@ function serialize(obj) {
         type = 'json_friendly'
         for_json = obj
     }
-    else throw CannotSerializeType.message += ` typeof: ${typeof obj}.`
+    else throw new CannotSerializeType(`typeof: ${typeof obj}.`)
     return JSON.stringify([type, for_json])
 }
 
@@ -45,3 +44,4 @@ exports.x = function() {return serialize([...arguments])}
 exports.o = unserialize
 exports.serialize = serialize
 exports.unserialize = unserialize
+exports.CannotSerializeType = CannotSerializeType

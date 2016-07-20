@@ -12,6 +12,7 @@
     "array-all": "^1.0.0",
     "array-range": "^1.0.1",
     "compute-sum": "^2.0.0",
+    "es6-error": "^3.0.1",
     "object-filter": "^1.0.2",
     "object-values": "^1.0.0",
     "object.map": "^0.2.0",
