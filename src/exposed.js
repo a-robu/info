@@ -1,5 +1,6 @@
 let info = require('./info')
 let empowerment = require('./empowerment')
+let xoxo = require('./xoxo')
 
 exports.h = info.h
 exports.mi = info.mi
@@ -7,6 +8,7 @@ exports.cond_h = info.cond_h
 exports.c = info.c
 exports.kl = info.kl
 exports.util = {normalize: info.normalize, apply_cond: info.apply_channel}
+exports.xoxo = xoxo
 exports.channels = {
     make_bac: info.make_bac
 }
