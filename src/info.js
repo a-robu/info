@@ -36,6 +36,15 @@ function decompose_space(xyvec) {
     return vars
 }
 
+//P(H|e) = P(e|H)P(H)/Z
+function bayes_update(physics, prior, evidence) {
+    let result = {}
+    for (let hypoth of Object.keys(physics)) {
+        result[hypoth] = physics[hypoth][evidence] * prior[hypoth]
+    }
+    return normalize(result)
+}
+
 //E(f)
 function func_ev(domain, f, p) {
     return sum(Array.from(domain).filter(x => p(x) > 0).map(x => p(x) * f(x)))
@@ -241,6 +250,7 @@ exports.blahut_mi = blahut_mi
 exports.blahut_error = blahut_error
 exports.bin_h = bin_h
 exports.make_bac = make_bac
+exports.bayes_update = bayes_update
 
 if (!module.parent) {
     let percentages = (n) => range(n).map(x => x / n)

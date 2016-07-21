@@ -9,6 +9,7 @@ exports.c = info.c
 exports.kl = info.kl
 exports.util = {normalize: info.normalize, apply_cond: info.apply_channel}
 exports.xoxo = xoxo
+exports.bayes_update = info.bayes_update
 exports.channels = {
     make_bac: info.make_bac
 }

@@ -396,3 +396,18 @@ describe('repair_receiver_space', () => {
         })
     })
 })
+
+describe('bayes_update', () => {
+    it('agrees with a hand-calculated experiment', () => {
+        let prior = {baby: 0.9, mouse: 0.1}
+        let physics = {
+            baby: {large: 0.99, small: 0.01},
+            mouse: {large: 0.15, small: 0.85}
+        }
+        //p(baby|large) = p(large|baby)p(baby) /Z
+        //p(mouse|large) = p(large|mouse)p(mouse) /Z
+        let expected = info.normalize({baby: 0.9 * 0.99, mouse: 0.1 * 0.15})
+        let posterior = info.bayes_update(physics, prior, 'large')
+        expect(posterior).toVecEqual(expected)
+    })
+})

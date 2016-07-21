@@ -28,6 +28,6 @@ describe('toVecEqual', () => {
                 'a': 1,
                 'b': 2
             })
-        }).toThrow(vec_matchers.StateSpaceMismatch)
+        }).toThrowError(vec_matchers.StateSpaceMismatch)
     })
 })
