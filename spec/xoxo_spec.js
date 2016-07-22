@@ -38,3 +38,9 @@ describe('x', () => {
         }).toThrowError(xoxo.CannotSerializeType)
     })
 })
+
+describe('o', () => {
+    it('can reverse the action of x()', () => {
+        expect(xoxo.o(xoxo.x(1, 2, 3))).toEqual([1, 2, 3])
+    })
+})

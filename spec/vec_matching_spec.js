@@ -17,7 +17,7 @@ describe('toVecEqual', () => {
         })
     })
     it('matches floats that are almost equal', () => {
-        expect({0: 1.000001}).toVecEqual({0: 1})
+        expect([1.000001]).toVecEqual([1])
     })
     it('returns false if the state spaces do not match', () => {
         expect(() => {
@@ -29,5 +29,14 @@ describe('toVecEqual', () => {
                 'b': 2
             })
         }).toThrowError(vec_matchers.StateSpaceMismatch)
+    })
+    it('works recursively', () => {
+        expect({
+            a: {0: 1, 1: 2},
+            b: 3
+        }).toVecEqual({
+            a: {0: 1, 1: 2.0000001},
+            b: 3
+        })
     })
 })

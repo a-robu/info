@@ -12,6 +12,11 @@ function compare_floats(actual, expected, precision) {
 }
 
 class StateSpaceMismatch extends ExtendableError {}
+class ValuesTypeMismatch extends ExtendableError {}
+
+function isNumeric(n) {
+  return !isNaN(parseFloat(n)) && isFinite(n);
+}
 
 function vec_diff(left, right) {
     const leftset = new Set(Object.keys(left))
@@ -21,7 +26,15 @@ function vec_diff(left, right) {
     }
     let result = {}
     for (let k of Object.keys(left)) {
-        result[k] = compare_floats(left[k], right[k])
+        if (isNumeric(left[k]) && isNumeric(right[k])) {
+            result[k] = compare_floats(left[k], right[k])
+        }
+        else if (Object.keys(left[k]) && Object.keys(right[k])) {
+            result[k] = all(values(vec_diff(left[k], right[k])))
+        }
+        else {
+            throw new ValuesTypeMismatch('Cannot compare vector entries.')
+        }
     }
     return result
 }

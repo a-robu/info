@@ -44,6 +44,21 @@ const vegetable_color = {
 //VegCol.space() -> {('tomato', 'red'), ...}
 //VegCol['tomat', 'red']
 
+// p(x, y) | purr    | bark
+//------------------------
+//    cat  |  ****   |  *
+//    dog  |   *     |  ***
+let sound_to_animal = {
+    purr: {cat: 4 / 5, dog: 1 / 5},
+    bark: {cat: 1 / 4, dog: 3 / 4}
+}// p(animal|sound)
+let sound_vec = {purr: 5 / 9, bark: 4 / 9}
+let animal_sound = {
+    [x('cat', 'purr')]: 4 / 9,
+    [x('cat', 'bark')]: 1 / 9,
+    [x('dog', 'purr')]: 1 / 9,
+    [x('dog', 'bark')]: 3 / 9,
+}
 
 describe('outcome_i', () => {
 	it('computes the surprisal of an event which was inevitable', () => {
@@ -89,9 +104,9 @@ describe('slice', () => {
     })
 })
 
-describe('lock_var', () => {
+describe('if_y', () => {
     it('compute the p dist of vegetable after being given the color orange', () => {
-        expect(info.lock_var(vegetable_color, 1, 'orange')).toVecEqual({
+        expect(info.if_y(vegetable_color, 'orange')).toVecEqual({
             'tomato': 1 / 4,
             'orange': 3 / 4
         })
@@ -154,19 +169,19 @@ describe('map_ev', () => {
 
 describe('cond_h', () => {
     it('computes the H(color|vegetable)', () => {
-        expect(info.cond_h(vegetable_color, 1)).toBeCloseTo(0.8754)
+        expect(info.cond_h(vegetable_color)).toBeCloseTo(0.8754)
     })
     it('works with blank columns', () => {
         expect(info.cond_h(table_notation([
             [0.5, 0],
             [0.5, 0]
-        ]), 0)).toBeCloseTo(0)
+        ]))).toBeCloseTo(1)
     })
     it('works with blank rows', () => {
         expect(info.cond_h(table_notation([
             [0.5, 0.5],
             [0, 0]
-        ]), 0)).toBeCloseTo(1)
+        ]))).toBeCloseTo(0)
     })
 })
 
@@ -339,9 +354,9 @@ describe('kl', () => {
     })
 })
 
-describe('make_jointxy', () => {
+describe('cond_to_joint', () => {
     it('makes a joint p dist given a cond and a marginal', () => {
-        expect(info.make_jointxy({
+        expect(info.cond_to_joint({
             'a': {
                 'x': 0.5,
                 'y': 0.5
@@ -356,6 +371,19 @@ describe('make_jointxy', () => {
             [x('x', 'b')]: 0 * 0.6,
             [x('y', 'b')]: 1 * 0.6
         })
+    })
+    it('agrees with a hand calculation', () => {
+        let actual = info.cond_to_joint(sound_to_animal, sound_vec)
+        expect(actual).toVecEqual(animal_sound)
+    })
+    it('fills in zeroes for missing entries in the output space', () => {
+        pending('test not implemented')
+    })
+})
+
+describe('joint_to_cond', () => {
+    it('agrees with hand-calculation', () => {
+        expect(info.joint_to_cond(animal_sound)).toVecEqual(sound_to_animal)
     })
 })
 
@@ -409,5 +437,25 @@ describe('bayes_update', () => {
         let expected = info.normalize({baby: 0.9 * 0.99, mouse: 0.1 * 0.15})
         let posterior = info.bayes_update(physics, prior, 'large')
         expect(posterior).toVecEqual(expected)
+    })
+})
+
+describe('swap', () => {
+    it('is correct for an example', () => {
+        let sample = {
+            [x('a', 1)]: 0.1,
+            [x('b', 2)]: 0.9
+        }
+        let expected = {
+            [x(1, 'a')]: 0.1,
+            [x(2, 'b')]: 0.9
+        }
+        expect(info.swap(sample)).toVecEqual(expected)
+    })
+})
+
+describe('reverse_cond', () => {
+    it('works on an example', () => {
+        pending('test not implemented')
     })
 })

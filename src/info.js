@@ -68,9 +68,9 @@ function normalize(vec) {
     return object_map(vec, x => x / precomputed_sum)
 }
 
-//P(Y, Z|X = x) given P(X, Y, Z)
-function lock_var(xyvec, i, val) {
-    return normalize(slice(xyvec, i, val))
+//P(Y|X = x) given P(X, Y)
+function if_y(xyvec, val) {
+    return normalize(slice(xyvec, 1, val))
 }
 
 //P(X = x) given P(X, Y, Z)
@@ -83,7 +83,6 @@ function marginalize(xyvec, i) {
     const wanted_domain = decompose_space(xyvec)[i]
     return make_vec(wanted_domain, val => marginal(xyvec, i, val))
 }
-
 
 //I(X = x) self information associated with an outcome
 function outcome_i(p) {
@@ -109,15 +108,15 @@ function ev(vec) {
     return func_ev(Object.keys(vec), parseFloat, vec_to_func(vec))
 }
 
-//H(X|Y)
-function cond_h(xyvec, i) {
-    const var_domain = decompose_space(xyvec)[i]
-    const val_h = val => h(lock_var(xyvec, i, val))
-    return func_ev(var_domain, val_h, val => marginal(xyvec, i, val))
+//H(X|Y) given P(X, Y)
+function cond_h(xyvec) {
+    const var_domain = decompose_space(xyvec)[1]
+    const val_h = val => h(if_y(xyvec, val))
+    return func_ev(var_domain, val_h, val => marginal(xyvec, 1, val))
 }
 
 //P(X, Y) given P(X|Y) and P(Y)
-function make_jointxy(channel, pyvec) {
+function cond_to_joint(channel, pyvec) {
     let result = {}
     let xkeys = channel_receiver_space(channel)
     let ykeys = channel_transmitter_space(channel)
@@ -129,10 +128,36 @@ function make_jointxy(channel, pyvec) {
     return result
 }
 
+//P(X|Y) given P(X, Y) 
+function joint_to_cond(pxy) {
+    let yspace = decompose_space(pxy)[1]
+    let cond = {}
+    for (let yval of yspace) {
+        cond[yval] = if_y(pxy, yval)
+    }
+    return cond
+}
+
+//P(Y, X) given P(X, Y)
+function swap(pxy) {
+    let pyx = {}
+    for (let [a, b] of Object.keys(pxy).map(o)) {
+        pyx[x(b, a)] = pxy[x(a, b)]
+    }
+    return pyx
+}
+
+//P(Y|X) given P(X|Y) and P(Y)
+function reverse_cond(x_given_y, py) {
+    let pxy = cond_to_joint(x_given_y, py)
+    return joint_to_cond(swap(pxy))
+}
+
 //I(X;Y) given P(X, Y)
 function mi(xyvec) {
     const x = marginalize(xyvec, 0)
-    return h(x) - cond_h(xyvec, 1)
+    //I(X;Y) = H(X) - H(X|Y)
+    return h(x) - cond_h(xyvec)
 }
 
 function channel_transmitter_space(channel) {
@@ -197,7 +222,7 @@ function blahut_step(channel, pxvec) {
 }
 
 function blahut_mi(channel, vec) {
-    return Math.max(0, mi(make_jointxy(channel, vec)))
+    return Math.max(0, mi(cond_to_joint(channel, vec)))
 }
 
 function blahut_error(channel, prev, now) {
@@ -232,7 +257,7 @@ exports.map_ev = map_ev
 exports.ev = ev
 exports.uniform = uniform
 exports.normalize = normalize
-exports.lock_var = lock_var
+exports.if_y = if_y
 exports.marginal = marginal
 exports.marginalize = marginalize
 exports.outcome_i = outcome_i
@@ -242,7 +267,9 @@ exports.mi = mi
 exports.channel_transmitter_space = channel_transmitter_space
 exports.channel_receiver_space = channel_receiver_space
 exports.kl = kl
-exports.make_jointxy = make_jointxy
+exports.cond_to_joint = cond_to_joint
+exports.joint_to_cond = joint_to_cond
+exports.swap = swap
 exports.repair_receiver_space = repair_receiver_space
 exports.c = c
 exports.blahut_step = blahut_step
