@@ -279,6 +279,10 @@ exports.bin_h = bin_h
 exports.make_bac = make_bac
 exports.bayes_update = bayes_update
 
+exports.util = require('./info')
+exports.emp = require('./emp')
+exports.xoxo = require('./xoxo')
+
 if (!module.parent) {
     let percentages = (n) => range(n).map(x => x / n)
     console.log('Running info benchmark.')
