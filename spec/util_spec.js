@@ -145,3 +145,14 @@ describe('max', () => {
         expect(util.max(vals, keyfunc)).toEqual('b')
     })
 })
+
+describe('min', () => {
+    it('returns the min of a list', () => {
+        expect(util.min([3, 4, 2, 6])).toEqual(2)
+    })
+    it('accepts a key as an argument', () => {
+        expect(util.min(['a', 'b', 'c'], val => {
+            return {a: 5, b: 3, c: 7}[val]
+        })).toEqual('b')
+    })
+})

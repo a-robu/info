@@ -83,9 +83,14 @@ function max(list, key = x => x) {
     return max_i
 }
 
+function min(list, key = x => x) {
+    return max(list, x => - key(x))
+}
+
 exports.many_sets_union = many_sets_union
 exports.lerp_vecs = lerp_vecs
 exports.max = max
+exports.min = min
 exports.blank_vec = blank_vec
 exports.vec_to_func = vec_to_func
 exports.table_notation = table_notation
