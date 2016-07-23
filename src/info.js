@@ -279,7 +279,7 @@ exports.bin_h = bin_h
 exports.make_bac = make_bac
 exports.bayes_update = bayes_update
 
-exports.util = require('./info')
+exports.util = require('./util')
 exports.emp = require('./emp')
 exports.xoxo = require('./xoxo')
 
