@@ -308,17 +308,17 @@ exports.util = require('./util')
 exports.emp = require('./emp')
 exports.xoxo = require('./xoxo')
 
-if (!module.parent) {
-    let percentages = (n) => range(n).map(x => x / n)
-    console.log('Running info benchmark.')
-    let start = (new Date()).getTime()
-    let times = 100
-    for (let p of percentages(times)) {
-        for (let q of percentages(times)) {
-            c(make_bac(p, q))
-        }
-    }
-    let end = (new Date()).getTime()
-    console.log('Ran c(make_bac(p, q)) for ' + (times * times) + ' times.')
-    console.log('Duration: '+ (end - start) + 'ms. ' + ((end - start) / (times * times)) + 'ms per execution.')
-}
+// if (!module.parent) {
+//     let percentages = (n) => range(n).map(x => x / n)
+//     console.log('Running info benchmark.')
+//     let start = (new Date()).getTime()
+//     let times = 100
+//     for (let p of percentages(times)) {
+//         for (let q of percentages(times)) {
+//             c(make_bac(p, q))
+//         }
+//     }
+//     let end = (new Date()).getTime()
+//     console.log('Ran c(make_bac(p, q)) for ' + (times * times) + ' times.')
+//     console.log('Duration: '+ (end - start) + 'ms. ' + ((end - start) / (times * times)) + 'ms per execution.')
+// }
