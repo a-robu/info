@@ -1,4 +1,5 @@
 'use strict'
+const ExtendableError = require('es6-error')
 const sum = require('./util').sum
 const values = require('./util').values
 const range = require('./util').range
@@ -9,6 +10,8 @@ const xoxo = require('./xoxo')
 const x = require('./xoxo').x
 const o = require('./xoxo').o
 
+class CannotNormalizeZeroVector extends ExtendableError {}
+        
 function slice(xyvec, var_i, val) {
     let result = {}
     for (let state_str of Object.keys(xyvec)) {
@@ -64,7 +67,7 @@ function uniform(iterable) {
 function normalize(vec) {
     const precomputed_sum = sum(values(vec))
     if (precomputed_sum === 0) {
-        throw new Error('Cannot normalize the zero vector.')
+        throw new CannotNormalizeZeroVector()
     }
     return object_map(vec, x => x / precomputed_sum)
 }
@@ -134,7 +137,12 @@ function joint_to_cond(pxy) {
     let yspace = decompose_space(pxy)[1]
     let cond = {}
     for (let yval of yspace) {
-        cond[yval] = if_y(pxy, yval)
+        try {
+            cond[yval] = if_y(pxy, yval)
+        }
+        catch (e) {
+            if (!e instanceof CannotNormalizeZeroVector) throw e
+        }
     }
     return cond
 }
@@ -294,6 +302,7 @@ exports.blahut_error = blahut_error
 exports.bin_h = bin_h
 exports.make_bac = make_bac
 exports.bayes_update = bayes_update
+exports.CannotNormalizeZeroVector = CannotNormalizeZeroVector
 
 exports.util = require('./util')
 exports.emp = require('./emp')

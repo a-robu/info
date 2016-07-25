@@ -91,7 +91,7 @@ describe('normalize', () => {
                 'a': 0,
                 'b': 0
             })
-        }).toThrow()
+        }).toThrowError(info.CannotNormalizeZeroVector)
     })
 })
 
@@ -384,6 +384,17 @@ describe('cond_to_joint', () => {
 describe('joint_to_cond', () => {
     it('agrees with hand-calculation', () => {
         expect(info.joint_to_cond(animal_sound)).toVecEqual(sound_to_animal)
+    })
+    it('skips over outcomes for which the P(condition) = 0', () => {
+        let sample = {
+            [x(0, 0)]: 0,
+            [x(1, 0)]: 0,
+            [x(0, 1)]: 0.5,
+            [x(1, 1)]: 0.5
+        }
+        expect(info.joint_to_cond(sample)).toEqual({
+            1: {0: 0.5, 1: 0.5}
+        })
     })
 })
 
