@@ -440,7 +440,7 @@ describe('bayes_update', () => {
     })
 })
 
-describe('swap', () => {
+describe('reorder', () => {
     it('is correct for an example', () => {
         let sample = {
             [x('a', 1)]: 0.1,
@@ -450,12 +450,28 @@ describe('swap', () => {
             [x(1, 'a')]: 0.1,
             [x(2, 'b')]: 0.9
         }
-        expect(info.swap(sample)).toVecEqual(expected)
+        expect(info.reorder(sample, [1, 2], [2, 1])).toVecEqual(expected)
     })
 })
 
 describe('reverse_cond', () => {
     it('works on an example', () => {
         pending('test not implemented')
+    })
+})
+
+describe('cond_mi', () => {
+    it('works on an example', () => {
+        let pxyz = info.normalize({
+            [x(0, 0, 'connected')]: 1 * 0.75,
+            [x(0, 1, 'connected')]: 0,
+            [x(1, 0, 'connected')]: 0,
+            [x(1, 1, 'connected')]: 1 * 0.75,
+            [x(0, 0, 'disconnected')]: 1 * 0.25,
+            [x(0, 1, 'disconnected')]: 1 * 0.25,
+            [x(1, 0, 'disconnected')]: 0,
+            [x(1, 1, 'disconnected')]: 0,
+        })
+        expect(info.cond_mi(pxyz)).toEqual(0.75)
     })
 })

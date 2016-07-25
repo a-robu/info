@@ -5,6 +5,7 @@ const range = require('./util').range
 const object_map = require('./util').object_map
 const make_vec = require('./util').make_vec
 const vec_to_func = require('./util').vec_to_func
+const xoxo = require('./xoxo')
 const x = require('./xoxo').x
 const o = require('./xoxo').o
 
@@ -78,7 +79,7 @@ function marginal(xyvec, i, val) {
     return sum(values(slice(xyvec, i, val)))
 }
 
-//P(X) given P(X, Y, Z)
+//P(i) given P(X, Y, Z)
 function marginalize(xyvec, i) {
     const wanted_domain = decompose_space(xyvec)[i]
     return make_vec(wanted_domain, val => marginal(xyvec, i, val))
@@ -138,19 +139,19 @@ function joint_to_cond(pxy) {
     return cond
 }
 
-//P(Y, X) given P(X, Y)
-function swap(pxy) {
-    let pyx = {}
-    for (let [a, b] of Object.keys(pxy).map(o)) {
-        pyx[x(b, a)] = pxy[x(a, b)]
+function reorder(p, old_tree, new_tree) {
+    let newp = {}
+    for (let key of Object.keys(p)) {
+        let newkey = xoxo.reorder_xtree(key, old_tree, new_tree)
+        newp[newkey] = p[key]
     }
-    return pyx
+    return newp
 }
 
 //P(Y|X) given P(X|Y) and P(Y)
 function reverse_cond(x_given_y, py) {
     let pxy = cond_to_joint(x_given_y, py)
-    return joint_to_cond(swap(pxy))
+    return joint_to_cond(reorder(pxy, [1, 2], [2, 1]))
 }
 
 //I(X;Y) given P(X, Y)
@@ -158,6 +159,14 @@ function mi(xyvec) {
     const x = marginalize(xyvec, 0)
     //I(X;Y) = H(X) - H(X|Y)
     return h(x) - cond_h(xyvec)
+}
+
+//I(X;Y|Z) given P(X, Y, Z)
+function cond_mi(pxyz) {
+    let first_grouped = reorder(pxyz, [1, 2, 3], [[1, 2], 3])
+    let z_to_xy = joint_to_cond(first_grouped)
+    let pz = marginalize(first_grouped, 1)
+    return func_ev(Object.keys(pz), z => mi(z_to_xy[z]), vec_to_func(pz))
 }
 
 function channel_transmitter_space(channel) {
@@ -269,7 +278,8 @@ exports.channel_receiver_space = channel_receiver_space
 exports.kl = kl
 exports.cond_to_joint = cond_to_joint
 exports.joint_to_cond = joint_to_cond
-exports.swap = swap
+exports.reorder = reorder
+exports.cond_mi = cond_mi
 exports.repair_receiver_space = repair_receiver_space
 exports.c = c
 exports.blahut_step = blahut_step

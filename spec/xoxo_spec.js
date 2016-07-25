@@ -1,4 +1,6 @@
 let xoxo = require('../src/xoxo')
+let o = require('../src/xoxo').o
+let x = require('../src/xoxo').x
 
 describe('roundtrip', () => {
     it('works on empty lists', () => {
@@ -30,17 +32,67 @@ describe('roundtrip', () => {
 
 describe('x', () => {
     it('takes multiple arguments', () => {
-        expect(xoxo.x(1, 2)).toEqual(xoxo.serialize([1, 2]))
+        expect(x(1, 2)).toEqual(xoxo.serialize([1, 2]))
     })
     it('throws an error if it cannot serialise that key', () => {
         expect(() => {
-            xoxo.x(new Int16Array())
+            x(new Int16Array())
         }).toThrowError(xoxo.CannotSerializeType)
     })
 })
 
 describe('o', () => {
     it('can reverse the action of x()', () => {
-        expect(xoxo.o(xoxo.x(1, 2, 3))).toEqual([1, 2, 3])
+        expect(o(x(1, 2, 3))).toEqual([1, 2, 3])
+    })
+})
+
+describe('absorb_values', () => {
+    it('absorbs the one value', () => {
+        expect(xoxo.absorb_values(x(1), ['a'])).toEqual({a: 1})
+    })
+    it('can handle nested stuff', () => {
+        let xtree = x(x(1, 2), 3)
+        expect(xoxo.absorb_values(xtree, [[1, 2], 3]))
+    })
+})
+
+describe('imprint_values', () => {
+    it('can imprint one value', () => {
+        expect(xoxo.imprint_values({a: 1}, ['a'])).toEqual(x(1))
+    })
+    it('can handle trees', () => {
+        let actual = xoxo.imprint_values({a: 1, b: 2, c: 3}, [['a', 'b'], 'c'])
+        expect(actual).toEqual(x(x(1, 2), 3))
+    })
+})
+
+describe('reorder_xtree', () => {
+    it('leaves one element in its place', () => {
+        expect(xoxo.reorder_xtree(x(1), ['a'], ['a'])).toEqual(x(1))
+    })
+    it('swaps three elements', () => {
+        let actual = xoxo.reorder_xtree(
+            x(1, 2, 3),
+            ['a', 'b', 'c'],
+            ['b', 'c', 'a']
+        )
+        expect(actual).toEqual(x(2, 3, 1))
+    })
+    it('opens trees', () => {
+        let actual = xoxo.reorder_xtree(
+            x(x(1, 2)),
+            [['a', 'b']],
+            ['a', 'b']
+        )
+        expect(actual).toEqual(x(1, 2))
+    })
+    it('closes trees', () => {
+        let actual = xoxo.reorder_xtree(
+            x(1, 2),
+            ['a', 'b'],
+            [['a', 'b']]
+        )
+        expect(actual).toEqual(x(x(1, 2)))
     })
 })
