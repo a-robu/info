@@ -85,12 +85,12 @@ exports.next_states = next_states
 exports._tunnel_game = _tunnel_game
 exports._2d_diamond_game = _2d_diamond_game
 
-if (!module.parent) {
-    console.log('Testing on the tunnel game.')
-    for (let i of [0, 1, 2]) {
-        console.log({
-            i: i,
-            emp: evaluate_state(_tunnel_game, {[i]: 1})
-        })
-    }
-}
+// if (!module.parent) {
+//     console.log('Testing on the tunnel game.')
+//     for (let i of [0, 1, 2]) {
+//         console.log({
+//             i: i,
+//             emp: evaluate_state(_tunnel_game, {[i]: 1})
+//         })
+//     }
+// }
