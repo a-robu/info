@@ -1,6 +1,6 @@
 {
   "name": "info",
-  "version": "2.2.3",
+  "version": "2.2.4",
   "description": "Computes Information Theory functions",
   "main": "src/info.js",
   "scripts": {
