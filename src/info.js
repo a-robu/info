@@ -148,10 +148,15 @@ function reorder(p, old_tree, new_tree) {
     return newp
 }
 
+//P(Y, X) given P(X, Y)
+function swap(pxy) {
+    return reorder(pxy, [1, 2], [2, 1])
+}
+
 //P(Y|X) given P(X|Y) and P(Y)
 function reverse_cond(x_given_y, py) {
     let pxy = cond_to_joint(x_given_y, py)
-    return joint_to_cond(reorder(pxy, [1, 2], [2, 1]))
+    return joint_to_cond(swap(pxy))
 }
 
 //I(X;Y) given P(X, Y)
@@ -282,6 +287,7 @@ exports.reorder = reorder
 exports.cond_mi = cond_mi
 exports.repair_receiver_space = repair_receiver_space
 exports.c = c
+exports.swap = swap
 exports.blahut_step = blahut_step
 exports.blahut_mi = blahut_mi
 exports.blahut_error = blahut_error
