@@ -59,6 +59,10 @@ let animal_sound = {
     [x('dog', 'purr')]: 1 / 9,
     [x('dog', 'bark')]: 3 / 9,
 }
+let animal_to_sound = {
+    cat: {purr: 4 / 5, bark: 1 / 5},
+    dog: {purr: 1 / 4, bark: 3 / 4}
+}
 
 describe('outcome_i', () => {
 	it('computes the surprisal of an event which was inevitable', () => {
@@ -378,6 +382,13 @@ describe('cond_to_joint', () => {
     })
     it('fills in zeroes for missing entries in the output space', () => {
         pending('test not implemented')
+    })
+})
+
+describe('reverse_cond', () => {
+    it('agrees with hand calculation', () => {
+        let actual = info.reverse_cond(sound_to_animal, sound_vec)
+        expect(actual).toVecEqual(animal_to_sound)
     })
 })
 

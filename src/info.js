@@ -302,6 +302,7 @@ exports.blahut_error = blahut_error
 exports.bin_h = bin_h
 exports.make_bac = make_bac
 exports.bayes_update = bayes_update
+exports.reverse_cond = reverse_cond
 exports.CannotNormalizeZeroVector = CannotNormalizeZeroVector
 
 exports.util = require('./util')
