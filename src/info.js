@@ -252,6 +252,10 @@ function blahut_error(channel, prev, now) {
 }
 
 function c(channel, precision = 0.000000001) {
+    return blahut_mi(channel, channel_best_source(channel, precision))
+}
+
+function channel_best_source(channel, precision = 0.000000001) {
     let prev = uniform(channel_transmitter_space(channel))
     let next
     let error = Infinity
@@ -260,7 +264,7 @@ function c(channel, precision = 0.000000001) {
         error = blahut_error(channel, next, prev)
         prev = next
     }
-    return blahut_mi(channel, next)
+    return next
 }
 
 function bin_h(p) {
@@ -303,6 +307,7 @@ exports.bin_h = bin_h
 exports.make_bac = make_bac
 exports.bayes_update = bayes_update
 exports.reverse_cond = reverse_cond
+exports.channel_best_source = channel_best_source
 exports.CannotNormalizeZeroVector = CannotNormalizeZeroVector
 
 exports.util = require('./util')
