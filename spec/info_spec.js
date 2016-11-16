@@ -229,13 +229,6 @@ describe('mi', () => {
             [0, 0]
         ]))).toBeCloseTo(0)
     })
-    it('works on an example', () => {
-        expect(info.mi(table_notation([
-            [1, 0],
-            [0, 1],
-            [0, 1]
-        ]))).toBeCloseTo(1)
-    })
 })
 
 describe('decompose_space', () => {
